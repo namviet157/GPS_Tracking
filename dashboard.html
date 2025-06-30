@@ -6,6 +6,7 @@
     <title>BikeGuard - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
@@ -135,7 +136,7 @@
                     <div class="bg-purple-100 rounded-lg p-3">
                         <i data-lucide="map-pin" class="h-6 w-6 text-purple-600"></i>
                     </div>
-                    <span class="text-purple-600 font-semibold text-lg">1.2km</span>
+                    <span id="distance-value" class="text-purple-600 font-semibold text-lg">--</span>
                 </div>
                 <h3 class="text-lg font-semibold text-gray-900">Distance</h3>
                 <p class="text-gray-600 text-sm">From your location</p>
@@ -197,52 +198,17 @@
                     </div>
                 </div>
 
-                <!-- Recent Activity -->
+                <!-- Vibration History Chart -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 slide-in">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-xl font-semibold text-gray-900">Recent Activity</h2>
+                    <div class="p-6 border-b border-gray-200 flex items-center justify-between">
+                        <h2 class="text-xl font-semibold text-gray-900">Lịch sử rung lắc xe máy</h2>
+                        <span class="text-gray-400 text-sm">Biểu đồ thời gian thực</span>
                     </div>
-                    
                     <div class="p-6">
-                        <div class="space-y-4">
-                            <div class="flex items-start space-x-3">
-                                <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
-                                <div class="flex-1">
-                                    <p class="text-gray-900 font-medium">Motion detected</p>
-                                    <p class="text-gray-600 text-sm">Your bike moved slightly at 2:34 PM</p>
-                                    <p class="text-gray-400 text-xs">5 minutes ago</p>
-                                </div>
-                                <i data-lucide="alert-triangle" class="h-4 w-4 text-yellow-500 mt-1"></i>
-                            </div>
-                            
-                            <div class="flex items-start space-x-3">
-                                <div class="w-2 h-2 bg-emerald-500 rounded-full mt-2"></div>
-                                <div class="flex-1">
-                                    <p class="text-gray-900 font-medium">Security armed</p>
-                                    <p class="text-gray-600 text-sm">Protection activated successfully</p>
-                                    <p class="text-gray-400 text-xs">1 hour ago</p>
-                                </div>
-                                <i data-lucide="shield" class="h-4 w-4 text-emerald-500 mt-1"></i>
-                            </div>
-                            
-                            <div class="flex items-start space-x-3">
-                                <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                                <div class="flex-1">
-                                    <p class="text-gray-900 font-medium">Battery status</p>
-                                    <p class="text-gray-600 text-sm">Battery level: 85% (Good)</p>
-                                    <p class="text-gray-400 text-xs">3 hours ago</p>
-                                </div>
-                                <i data-lucide="battery" class="h-4 w-4 text-blue-500 mt-1"></i>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6">
-                            <button class="w-full text-emerald-600 hover:text-emerald-700 font-medium text-sm border border-emerald-200 hover:border-emerald-300 rounded-lg py-2 transition-colors duration-200">
-                                View All Activity
-                            </button>
-                        </div>
+                        <canvas id="vibrationChart" height="80"></canvas>
                     </div>
                 </div>
+                
             </div>
 
             <!-- Right Column -->
@@ -340,7 +306,8 @@
         if (userData.firstName) {
             document.getElementById('user-name').textContent = userData.firstName;
             document.getElementById('welcome-name').textContent = userData.firstName;
-        } else if (userData.email) {
+        } 
+        else if (userData.email) {
             document.getElementById('user-name').textContent = userData.email.split('@')[0];
             document.getElementById('welcome-name').textContent = userData.email.split('@')[0];
         }
@@ -370,6 +337,95 @@
         if (!userData.email && !userData.firstName) {
             window.location.href = 'auth.html';
         }
+
+        // Giả lập vị trí xe máy (ví dụ: trung tâm thành phố Hà Nội)
+        const lat_bike = 21.028511;
+        const lon_bike = 105.804817;
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat_user = position.coords.latitude;
+            const lon_user = position.coords.longitude;
+
+            // Tính khoảng cách
+            const distance = haversine(lat_user, lon_user, lat_bike, lon_bike);
+
+            // Hiển thị khoảng cách (làm tròn, đơn vị mét hoặc km)
+            let display = '';
+            if (distance >= 1000) {
+                display = (distance / 1000).toFixed(2) + ' km';
+            } else {
+                display = Math.round(distance) + ' m';
+            }
+            document.getElementById('distance-value').textContent = display;
+        }, function() {
+            document.getElementById('distance-value').textContent = 'Không xác định';
+        });
+
+        function haversine(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Bán kính Trái Đất (m)
+            const toRad = angle => angle * Math.PI / 180;
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = Math.sin(dLat/2)**2 +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon/2)**2;
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; // khoảng cách tính bằng mét
+        }
+
+        const ctx = document.getElementById('vibrationChart').getContext('2d');
+
+        // Tạo dữ liệu mẫu cho 12 giờ gần nhất
+        const hours = [];
+        const now = new Date();
+        for (let i = 11; i >= 0; i--) {
+            const d = new Date(now.getTime() - i * 60 * 60 * 1000);
+            hours.push(d.getHours() + ':00');
+        }
+        const vibrationData = Array.from({length: 12}, () => Math.floor(Math.random() * 10));
+
+        // Khởi tạo biểu đồ đường
+        const vibrationChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: hours,
+                datasets: [{
+                    label: 'Số lần rung lắc',
+                    data: vibrationData,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16,185,129,0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#10b981',
+                    pointBorderColor: '#fff',
+                    pointHoverRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => ` ${ctx.parsed.y} lần`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        title: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f3f4f6' },
+                        title: { display: false },
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
 
         // Simulate real-time updates
         setInterval(() => {
