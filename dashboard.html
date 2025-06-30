@@ -286,9 +286,35 @@
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Need Help?</h3>
                         <p class="text-gray-600 text-sm mb-4">Our support team is available 24/7 to assist you.</p>
-                        <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200">
+                        <button id="contact-support-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200">
                             Contact Support
                         </button>
+                    </div>
+                </div>
+                <!-- Chatbox Modal -->
+                <div id="support-chatbox" class="fixed inset-0 z-50 flex items-end justify-end px-4 py-8 pointer-events-none">
+                    <div class="w-full max-w-sm bg-white rounded-xl shadow-2xl border border-emerald-200 slide-in pointer-events-auto" style="display:none;">
+                        <div class="flex items-center justify-between p-4 border-b border-gray-100">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="headphones" class="h-5 w-5 text-emerald-600"></i>
+                                <span class="font-semibold text-gray-900">Support Chat</span>
+                            </div>
+                            <button id="close-chatbox-btn" class="text-gray-400 hover:text-emerald-600 transition-colors">
+                                <i data-lucide="x" class="h-5 w-5"></i>
+                            </button>
+                        </div>
+                        <div class="p-4 h-64 overflow-y-auto text-sm text-gray-700 flex flex-col gap-2">
+                            <div class="self-start bg-emerald-50 text-emerald-900 px-3 py-2 rounded-lg mb-2">
+                                Hi 👋, how can we help you today?
+                            </div>
+                        </div>
+                        <form class="flex items-center border-t border-gray-100 p-2">
+                            <input type="text" class="flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-200 text-sm" placeholder="Type your message...">
+                            <button type="submit" class="ml-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                Send
+                            </button>
+                        </form>
+                        <div class="text-xs text-gray-400 text-center pb-2">Live chat coming soon</div>
                     </div>
                 </div>
             </div>
@@ -427,17 +453,47 @@
             }
         });
 
-        // Simulate real-time updates
-        setInterval(() => {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            
-            // Update last update time (this would be real data in production)
-            const lastUpdateElements = document.querySelectorAll('[data-update-time]');
-            lastUpdateElements.forEach(el => {
-                el.textContent = 'Just now';
-            });
-        }, 30000); // Update every 30 seconds
+        // Show chatbox
+        document.getElementById('contact-support-btn').onclick = function() {
+            const chatbox = document.querySelector('#support-chatbox > div');
+            document.getElementById('support-chatbox').style.pointerEvents = 'auto';
+            chatbox.style.display = 'block';
+            lucide.createIcons();
+        };
+        // Hide chatbox
+        document.getElementById('close-chatbox-btn').onclick = function() {
+            const chatbox = document.querySelector('#support-chatbox > div');
+            chatbox.style.display = 'none';
+            document.getElementById('support-chatbox').style.pointerEvents = 'none';
+        };
+
+        // Static bot reply on chat submit
+        const chatForm = document.querySelector('#support-chatbox form');
+        const chatInput = chatForm.querySelector('input[type="text"]');
+        const chatBody = chatForm.parentElement.querySelector('.p-4.h-64');
+
+        chatForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userMsg = chatInput.value.trim();
+            if (!userMsg) return;
+            // Append user message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'self-end bg-emerald-100 text-emerald-900 px-3 py-2 rounded-lg mb-2';
+            userDiv.textContent = userMsg;
+            chatBody.appendChild(userDiv);
+
+            // Static bot reply
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'self-start bg-emerald-50 text-emerald-900 px-3 py-2 rounded-lg mb-2';
+                botDiv.textContent = 'Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất.';
+                chatBody.appendChild(botDiv);
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 600);
+
+            chatInput.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+        });
     </script>
 </body>
 </html>
