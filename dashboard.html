@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
@@ -87,10 +89,10 @@
                         <!-- Dropdown Menu -->
                         <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden">
                             <div class="py-1">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</a>
+                                <!-- <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Billing</a>
                                 <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Support</a>
-                                <hr class="my-1">
+                                <hr class="my-1"> -->
                                 <button id="logout-btn" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Sign Out</button>
                             </div>
                         </div>
@@ -104,7 +106,7 @@
         <!-- Welcome Section -->
         <div class="mb-8 slide-in">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome back, <span id="welcome-name">User</span>!</h1>
-            <p class="text-gray-600">Monitor and protect your motorcycle with real-time insights.</p>
+            <p class="text-gray-600">Theo dõi và bảo vệ xe máy của bạn với thông tin chi tiết theo thời gian thực.</p>
         </div>
 
         <!-- Quick Stats -->
@@ -114,21 +116,10 @@
                     <div class="bg-emerald-100 rounded-lg p-3">
                         <i data-lucide="shield" class="h-6 w-6 text-emerald-600"></i>
                     </div>
-                    <span class="text-emerald-600 font-semibold text-lg">Armed</span>
+                    <span id="security-status" class="text-emerald-600 font-semibold text-lg">An toàn</span>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900">Security Status</h3>
-                <p class="text-gray-600 text-sm">Your bike is protected</p>
-            </div>
-
-            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 slide-in">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-blue-100 rounded-lg p-3">
-                        <i data-lucide="battery" class="h-6 w-6 text-blue-600"></i>
-                    </div>
-                    <span class="text-blue-600 font-semibold text-lg">85%</span>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900">Battery Level</h3>
-                <p class="text-gray-600 text-sm">12 days remaining</p>
+                <h3 class="text-lg font-semibold text-gray-900">Trạng thái bảo mật</h3>
+                <p class="text-gray-600 text-sm">Xe của bạn đã được bảo vệ</p>
             </div>
 
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 slide-in">
@@ -138,8 +129,8 @@
                     </div>
                     <span id="distance-value" class="text-purple-600 font-semibold text-lg">--</span>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900">Distance</h3>
-                <p class="text-gray-600 text-sm">From your location</p>
+                <h3 class="text-lg font-semibold text-gray-900">Khoảng cách</h3>
+                <p class="text-gray-600 text-sm">Từ thiết bị của bạn</p>
             </div>
 
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 slide-in">
@@ -147,10 +138,10 @@
                     <div class="bg-orange-100 rounded-lg p-3">
                         <i data-lucide="clock" class="h-6 w-6 text-orange-600"></i>
                     </div>
-                    <span class="text-orange-600 font-semibold text-lg">2m</span>
+                    <span id="time-value" class="text-orange-600 font-semibold text-lg">2m</span>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-900">Last Update</h3>
-                <p class="text-gray-600 text-sm">Real-time monitoring</p>
+                <h3 class="text-lg font-semibold text-gray-900">Cập nhật mới nhất</h3>
+                <p class="text-gray-600 text-sm">Giám sát thời gian thực</p>
             </div>
         </div>
 
@@ -171,29 +162,19 @@
                     </div>
                     
                     <div class="p-6">
-                        <div class="relative h-80 bg-gradient-to-br from-emerald-900/20 to-emerald-800/20 rounded-lg overflow-hidden">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="text-center">
-                                    <i data-lucide="map-pin" class="h-12 w-12 text-emerald-500 mx-auto mb-2"></i>
-                                    <p class="text-emerald-600 font-medium">Your Bike Location</p>
-                                    <p class="text-gray-600 text-sm">Downtown Area • Safe Zone</p>
-                                </div>
-                            </div>
-                            <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                <div class="relative">
-                                    <div class="w-4 h-4 bg-emerald-500 rounded-full animate-pulse"></div>
-                                    <div class="absolute -inset-2 bg-emerald-500/30 rounded-full animate-ping"></div>
-                                </div>
-                            </div>
-                        </div>
-                        
+                        <!-- OpenStreetMap (Leaflet) container -->
+                        <div id="map" class="relative h-80 rounded-lg overflow-hidden"></div>
                         <div class="mt-4 flex items-center justify-between">
                             <div class="text-sm text-gray-600">
                                 <span class="font-medium">Last seen:</span> 2 minutes ago
                             </div>
-                            <button class="text-emerald-600 hover:text-emerald-700 font-medium text-sm">
+                            <a 
+                                href="https://www.google.com/maps/search/?api=1&query=21.028511,105.804817" 
+                                target="_blank" 
+                                class="text-emerald-600 hover:text-emerald-700 font-medium text-sm"
+                            >
                                 View Full Map
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -220,60 +201,31 @@
                     </div>
                     
                     <div class="p-6 space-y-4">
-                        <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center">
-                            <i data-lucide="shield" class="h-5 w-5 mr-2"></i>
-                            Arm Security
-                        </button>
-                        
-                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center">
-                            <i data-lucide="map-pin" class="h-5 w-5 mr-2"></i>
-                            Find My Bike
-                        </button>
-                        
-                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center">
-                            <i data-lucide="settings" class="h-5 w-5 mr-2"></i>
-                            Settings
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Device Status -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-200 slide-in">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-xl font-semibold text-gray-900">Device Status</h2>
-                    </div>
-                    
-                    <div class="p-6 space-y-4">
+                        <!-- Toggle Anti-theft Alert -->
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <i data-lucide="signal" class="h-5 w-5 text-emerald-500 mr-3"></i>
-                                <span class="text-gray-700">Signal Strength</span>
+                                <i data-lucide="shield" class="h-5 w-5 text-emerald-600 mr-2"></i>
+                                <span class="font-medium text-gray-800">Cảnh báo chống trộm</span>
                             </div>
-                            <span class="text-emerald-600 font-semibold">Strong</span>
+                            <!-- Switch style -->
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="alert-toggle" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-emerald-600 transition-all duration-200"></div>
+                                <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
+                            </label>
                         </div>
-                        
+                        <!-- Toggle Auto Anti-theft Mode -->
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <i data-lucide="wifi" class="h-5 w-5 text-emerald-500 mr-3"></i>
-                                <span class="text-gray-700">Connection</span>
+                                <i data-lucide="zap" class="h-5 w-5 text-yellow-500 mr-2"></i>
+                                <span class="font-medium text-gray-800">Chống trộm tự động</span>
                             </div>
-                            <span class="text-emerald-600 font-semibold">Connected</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <i data-lucide="thermometer" class="h-5 w-5 text-blue-500 mr-3"></i>
-                                <span class="text-gray-700">Temperature</span>
-                            </div>
-                            <span class="text-blue-600 font-semibold">22°C</span>
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <i data-lucide="zap" class="h-5 w-5 text-yellow-500 mr-3"></i>
-                                <span class="text-gray-700">Power Mode</span>
-                            </div>
-                            <span class="text-yellow-600 font-semibold">Normal</span>
+                            <!-- Switch style -->
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="auto-toggle" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-yellow-400 transition-all duration-200"></div>
+                                <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -364,9 +316,9 @@
             window.location.href = 'auth.html';
         }
 
-        // Giả lập vị trí xe máy (ví dụ: trung tâm thành phố Hà Nội)
-        const lat_bike = 21.028511;
-        const lon_bike = 105.804817;
+        // Giả lập vị trí xe máy 
+        const lat_bike = 13.856219
+        const lon_bike = 109.038577
 
         navigator.geolocation.getCurrentPosition(function(position) {
             const lat_user = position.coords.latitude;
@@ -452,6 +404,30 @@
                 }
             }
         });
+
+        // Initialize Leaflet map
+        const bikeLat = 21.028511, bikeLng = 105.804817;
+        const map = L.map('map').setView([bikeLat, bikeLng], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+        L.marker([bikeLat, bikeLng]).addTo(map)
+            .bindPopup('Vị trí xe máy')
+            .openPopup();
+
+        // Restore toggle states from localStorage
+        document.getElementById('alert-toggle').checked = localStorage.getItem('alert_toggle') === 'on';
+        document.getElementById('auto-toggle').checked = localStorage.getItem('auto_toggle') === 'on';
+
+        // Save toggle state on change
+        document.getElementById('alert-toggle').addEventListener('change', function() {
+            localStorage.setItem('alert_toggle', this.checked ? 'on' : 'off');
+        });
+        document.getElementById('auto-toggle').addEventListener('change', function() {
+            localStorage.setItem('auto_toggle', this.checked ? 'on' : 'off');
+        });
+        lucide.createIcons();
 
         // Show chatbox
         document.getElementById('contact-support-btn').onclick = function() {
