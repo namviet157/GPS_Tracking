@@ -302,6 +302,7 @@
     </div>
 
     <script>
+        const API_URL = 'http://localhost:8080/api';
         // Initialize Lucide icons
         lucide.createIcons();
 
@@ -386,7 +387,7 @@
         });
         
         // Form submissions
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
             const email = formData.get('email');
@@ -395,17 +396,26 @@
             // Simulate login process
             console.log('Login attempt:', { email, password });
             
-            // Store user session (in real app, this would be handled by backend)
-            localStorage.setItem('bikeguard_user', JSON.stringify({
-                email: email,
-                loginTime: new Date().toISOString()
-            }));
-            
-            // Redirect to dashboard
-            window.location.href = 'dashboard.html';
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('bikeguard_user', JSON.stringify(data));
+                    window.location.href = 'dashboard.html';
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Login failed');
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
         });
 
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
             const password = formData.get('password');
@@ -422,17 +432,28 @@
                 lastName: formData.get('lastName'),
                 email: formData.get('email'),
                 phone: formData.get('phone'),
-                registrationTime: new Date().toISOString()
+                password: password
             };
             
             // Simulate registration process
             console.log('Registration attempt:', userData);
             
-            // Store user data (in real app, this would be handled by backend)
-            localStorage.setItem('bikeguard_user', JSON.stringify(userData));
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+                if (response.ok) {
+                    document.getElementById('success-modal').classList.remove('hidden');
+                } else {
+                    const data = await response.json();
+                    alert(data.error || 'Registration failed');
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
             
-            // Show success modal
-            document.getElementById('success-modal').classList.remove('hidden');
         });
 
         // Close modal and redirect
