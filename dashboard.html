@@ -89,10 +89,10 @@
                         <!-- Dropdown Menu -->
                         <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 hidden">
                             <div class="py-1">
-                                <!-- <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Billing</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Support</a>
-                                <hr class="my-1"> -->
+                                <a href="wifi-setup.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Wifi Settings</a>
+                                <!-- <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Billing</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Support</a> -->
+                                <hr class="my-1">
                                 <button id="logout-btn" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Sign Out</button>
                             </div>
                         </div>
@@ -107,42 +107,6 @@
         <div class="mb-8 slide-in">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome back, <span id="welcome-name">User</span>!</h1>
             <p class="text-gray-600">Theo dõi và bảo vệ xe máy của bạn với thông tin chi tiết theo thời gian thực.</p>
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 slide-in">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-emerald-100 rounded-lg p-3">
-                        <i data-lucide="shield" class="h-6 w-6 text-emerald-600"></i>
-                    </div>
-                    <span id="security-status" class="text-emerald-600 font-semibold text-lg">An toàn</span>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900">Trạng thái bảo mật</h3>
-                <p class="text-gray-600 text-sm">Xe của bạn đã được bảo vệ</p>
-            </div>
-
-            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 slide-in">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-purple-100 rounded-lg p-3">
-                        <i data-lucide="map-pin" class="h-6 w-6 text-purple-600"></i>
-                    </div>
-                    <span id="distance-value" class="text-purple-600 font-semibold text-lg">--</span>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900">Khoảng cách</h3>
-                <p class="text-gray-600 text-sm">Từ thiết bị của bạn</p>
-            </div>
-
-            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 slide-in">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="bg-orange-100 rounded-lg p-3">
-                        <i data-lucide="clock" class="h-6 w-6 text-orange-600"></i>
-                    </div>
-                    <span id="time-value" class="text-orange-600 font-semibold text-lg">2m</span>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-900">Cập nhật mới nhất</h3>
-                <p class="text-gray-600 text-sm">Giám sát thời gian thực</p>
-            </div>
         </div>
 
         <!-- Main Dashboard -->
@@ -194,6 +158,16 @@
 
             <!-- Right Column -->
             <div class="space-y-8">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 slide-in">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="bg-purple-100 rounded-lg p-3">
+                            <i data-lucide="map-pin" class="h-6 w-6 text-purple-600"></i>
+                        </div>
+                        <span id="distance-value" class="text-purple-600 font-semibold text-lg">--</span>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900">Khoảng cách</h3>
+                    <p class="text-gray-600 text-sm">Từ thiết bị của bạn</p>
+                </div>
                 <!-- Quick Actions -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 slide-in">
                     <div class="p-6 border-b border-gray-200">
@@ -227,47 +201,61 @@
                                 <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
                             </label>
                         </div>
+                        <!-- Toggle Turn off Anti-theft Ring -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i data-lucide="alert-triangle" class="h-5 w-5 text-red-600 mr-2"></i>
+                                <span class="font-medium text-gray-800">Chuông chống trộm</span>
+                            </div>
+                            <!-- Switch style -->
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="alert-ring-toggle" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-500 transition-all duration-200"></div>
+                                <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
+                            </label>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Support -->
-                <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-6 slide-in">
-                    <div class="text-center">
-                        <div class="bg-emerald-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
-                            <i data-lucide="headphones" class="h-6 w-6 text-white"></i>
+            </div>
+            <!-- Support -->
+            <div class="fixed bottom-6 right-6 z-50">
+                <button id="contact-support-btn"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-full shadow-lg transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.83L3 20l1.32-3.16A8.95 8.95 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                </button>
+            </div>
+            <!-- Chatbox Modal -->
+            <div id="support-chatbox" class="fixed inset-0 z-50 flex items-end justify-end px-4 py-8 pointer-events-none">
+                <div class="w-full max-w-sm bg-white rounded-xl shadow-2xl border border-emerald-200 slide-in pointer-events-auto" style="display:none;">
+                    <div class="flex items-center justify-between p-4 border-b border-gray-100">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="headphones" class="h-5 w-5 text-emerald-600"></i>
+                            <span class="font-semibold text-gray-900">Support Chat</span>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Need Help?</h3>
-                        <p class="text-gray-600 text-sm mb-4">Our support team is available 24/7 to assist you.</p>
-                        <button id="contact-support-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200">
-                            Contact Support
+                        <button id="close-chatbox-btn" class="text-gray-400 hover:text-emerald-600 transition-colors">
+                            <i data-lucide="x" class="h-5 w-5"></i>
                         </button>
                     </div>
-                </div>
-                <!-- Chatbox Modal -->
-                <div id="support-chatbox" class="fixed inset-0 z-50 flex items-end justify-end px-4 py-8 pointer-events-none">
-                    <div class="w-full max-w-sm bg-white rounded-xl shadow-2xl border border-emerald-200 slide-in pointer-events-auto" style="display:none;">
-                        <div class="flex items-center justify-between p-4 border-b border-gray-100">
-                            <div class="flex items-center space-x-2">
-                                <i data-lucide="headphones" class="h-5 w-5 text-emerald-600"></i>
-                                <span class="font-semibold text-gray-900">Support Chat</span>
-                            </div>
-                            <button id="close-chatbox-btn" class="text-gray-400 hover:text-emerald-600 transition-colors">
-                                <i data-lucide="x" class="h-5 w-5"></i>
-                            </button>
+                    <div class="p-4 h-64 overflow-y-auto text-sm text-gray-700 flex flex-col gap-2">
+                        <div class="self-start bg-emerald-50 text-emerald-900 px-3 py-2 rounded-lg mb-2">
+                            Hi 👋, how can we help you today?
                         </div>
-                        <div class="p-4 h-64 overflow-y-auto text-sm text-gray-700 flex flex-col gap-2">
-                            <div class="self-start bg-emerald-50 text-emerald-900 px-3 py-2 rounded-lg mb-2">
-                                Hi 👋, how can we help you today?
-                            </div>
-                        </div>
-                        <form class="flex items-center border-t border-gray-100 p-2">
-                            <input type="text" class="flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-200 text-sm" placeholder="Type your message...">
-                            <button type="submit" class="ml-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
-                                Send
-                            </button>
-                        </form>
-                        <div class="text-xs text-gray-400 text-center pb-2">Live chat coming soon</div>
                     </div>
+                    <form class="flex items-center border-t border-gray-100 p-2">
+                        <input type="text" class="flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-200 text-sm" placeholder="Type your message...">
+                        <button type="submit" class="ml-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                            Send
+                        </button>
+                    </form>
+                    <div class="text-xs text-gray-400 text-center pb-2">Live chat coming soon</div>
                 </div>
             </div>
         </div>
@@ -419,13 +407,16 @@
         // Restore toggle states from localStorage
         document.getElementById('alert-toggle').checked = localStorage.getItem('alert_toggle') === 'on';
         document.getElementById('auto-toggle').checked = localStorage.getItem('auto_toggle') === 'on';
-
+        document.getElementById('alert-ring-toggle').checked = localStorage.getItem('alert_ring_toggle') === 'on';
         // Save toggle state on change
         document.getElementById('alert-toggle').addEventListener('change', function() {
             localStorage.setItem('alert_toggle', this.checked ? 'on' : 'off');
         });
         document.getElementById('auto-toggle').addEventListener('change', function() {
             localStorage.setItem('auto_toggle', this.checked ? 'on' : 'off');
+        });
+        document.getElementById('alert-ring-toggle').addEventListener('change', function() {
+            localStorage.setItem('alert_ring_toggle', this.checked ? 'on' : 'off');
         });
         lucide.createIcons();
 
