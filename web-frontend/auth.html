@@ -133,6 +133,7 @@
                     </div>
 
                     <button
+                        id="signin"
                         type="submit"
                         class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                     >
@@ -300,165 +301,134 @@
             </div>
         </div>
     </div>
-
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
     <script>
         const API_URL = 'http://localhost:8080/api';
         // Initialize Lucide icons
         lucide.createIcons();
 
         // Tab switching
-        const loginTab = document.getElementById('login-tab');
-        const registerTab = document.getElementById('register-tab');
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        const authTitle = document.getElementById('auth-title');
-        const authSubtitle = document.getElementById('auth-subtitle');
-
-        loginTab.addEventListener('click', () => {
-            loginTab.className = 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 bg-emerald-600 text-white';
-            registerTab.className = 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900';
-            loginForm.classList.remove('hidden');
-            registerForm.classList.add('hidden');
-            authTitle.textContent = 'Welcome Back';
-            authSubtitle.textContent = 'Sign in to your BikeGuard account';
+        $('#login-tab').on('click', function() {
+            $('#login-tab').attr('class', 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 bg-emerald-600 text-white');
+            $('#register-tab').attr('class', 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900');
+            $('#login-form').removeClass('hidden');
+            $('#register-form').addClass('hidden');
+            $('#auth-title').text('Welcome Back');
+            $('#auth-subtitle').text('Sign in to your BikeGuard account');
         });
 
-        registerTab.addEventListener('click', () => {
-            registerTab.className = 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 bg-emerald-600 text-white';
-            loginTab.className = 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900';
-            registerForm.classList.remove('hidden');
-            loginForm.classList.add('hidden');
-            authTitle.textContent = 'Create Account';
-            authSubtitle.textContent = 'Join BikeGuard to protect your motorcycle';
+        $('#register-tab').on('click', function() {
+            $('#register-tab').attr('class', 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 bg-emerald-600 text-white');
+            $('#login-tab').attr('class', 'flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 text-gray-600 hover:text-gray-900');
+            $('#register-form').removeClass('hidden');
+            $('#login-form').addClass('hidden');
+            $('#auth-title').text('Create Account');
+            $('#auth-subtitle').text('Join BikeGuard to protect your motorcycle');
         });
 
         // Password visibility toggle
-        const toggleLoginPassword = document.getElementById('toggle-login-password');
-        const loginPassword = document.getElementById('login-password');
-        const toggleRegisterPassword = document.getElementById('toggle-register-password');
-        const registerPassword = document.getElementById('register-password');
-
-        toggleLoginPassword.addEventListener('click', () => {
-            const type = loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
-            loginPassword.setAttribute('type', type);
+        $('#toggle-login-password').on('click', function() {
+            const $input = $('#login-password');
+            const type = $input.attr('type') === 'password' ? 'text' : 'password';
+            $input.attr('type', type);
             const icon = type === 'password' ? 'eye' : 'eye-off';
-            toggleLoginPassword.querySelector('i').setAttribute('data-lucide', icon);
+            $(this).find('i').attr('data-lucide', icon);
             lucide.createIcons();
         });
 
-        toggleRegisterPassword.addEventListener('click', () => {
-            const type = registerPassword.getAttribute('type') === 'password' ? 'text' : 'password';
-            registerPassword.setAttribute('type', type);
+        $('#toggle-register-password').on('click', function() {
+            const $input = $('#register-password');
+            const type = $input.attr('type') === 'password' ? 'text' : 'password';
+            $input.attr('type', type);
             const icon = type === 'password' ? 'eye' : 'eye-off';
-            toggleRegisterPassword.querySelector('i').setAttribute('data-lucide', icon);
+            $(this).find('i').attr('data-lucide', icon);
             lucide.createIcons();
         });
 
         // Password strength validation
-        const lengthCheck = document.getElementById('length-check');
-        const uppercaseCheck = document.getElementById('uppercase-check');
-        const numberCheck = document.getElementById('number-check');
-
-        registerPassword.addEventListener('input', (e) => {
-            const password = e.target.value;
-            
+        $('#register-password').on('input', function() {
+            const password = $(this).val();
             // Length check
             if (password.length >= 8) {
-                lengthCheck.innerHTML = '<i data-lucide="check" class="h-3 w-3 text-emerald-500 mr-1"></i><span class="text-emerald-500">8+ characters</span>';
+                $('#length-check').html('<i data-lucide="check" class="h-3 w-3 text-emerald-500 mr-1"></i><span class="text-emerald-500">8+ characters</span>');
             } else {
-                lengthCheck.innerHTML = '<i data-lucide="x" class="h-3 w-3 text-red-500 mr-1"></i><span class="text-red-500">8+ characters</span>';
+                $('#length-check').html('<i data-lucide="x" class="h-3 w-3 text-red-500 mr-1"></i><span class="text-red-500">8+ characters</span>');
             }
-
             // Uppercase check
             if (/[A-Z]/.test(password)) {
-                uppercaseCheck.innerHTML = '<i data-lucide="check" class="h-3 w-3 text-emerald-500 mr-1"></i><span class="text-emerald-500">Uppercase</span>';
+                $('#uppercase-check').html('<i data-lucide="check" class="h-3 w-3 text-emerald-500 mr-1"></i><span class="text-emerald-500">Uppercase</span>');
             } else {
-                uppercaseCheck.innerHTML = '<i data-lucide="x" class="h-3 w-3 text-red-500 mr-1"></i><span class="text-red-500">Uppercase</span>';
+                $('#uppercase-check').html('<i data-lucide="x" class="h-3 w-3 text-red-500 mr-1"></i><span class="text-red-500">Uppercase</span>');
             }
-
             // Number check
             if (/\d/.test(password)) {
-                numberCheck.innerHTML = '<i data-lucide="check" class="h-3 w-3 text-emerald-500 mr-1"></i><span class="text-emerald-500">Number</span>';
+                $('#number-check').html('<i data-lucide="check" class="h-3 w-3 text-emerald-500 mr-1"></i><span class="text-emerald-500">Number</span>');
             } else {
-                numberCheck.innerHTML = '<i data-lucide="x" class="h-3 w-3 text-red-500 mr-1"></i><span class="text-red-500">Number</span>';
+                $('#number-check').html('<i data-lucide="x" class="h-3 w-3 text-red-500 mr-1"></i><span class="text-red-500">Number</span>');
             }
-
             lucide.createIcons();
         });
-        
-        // Form submissions
-        loginForm.addEventListener('submit', async (e) => {
+
+        $('#signin').on('click', function(e){
             e.preventDefault();
-            const formData = new FormData(e.target);
-            const email = formData.get('email');
-            const password = formData.get('password');
-            
-            // Simulate login process
-            console.log('Login attempt:', { email, password });
-            
-            try {
-                const response = await fetch(`${API_URL}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    localStorage.setItem('bikeguard_user', JSON.stringify(data));
+            var data = {};
+            var formData = $('#login-form').serializeArray();
+            $.each(formData, function(i, v){
+                data[v.name] = v.value;
+            });
+            $.ajax({
+                type: "POST",
+                url: `${API_URL}/login`,
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(response) {
+                    // Lưu thông tin user vào localStorage và chuyển hướng
+                    localStorage.setItem('bikeguard_user', JSON.stringify(response));
                     window.location.href = 'dashboard.html';
-                } else {
-                    const data = await response.json();
-                    alert(data.error || 'Login failed');
+                },
+                error: function(xhr) {
+                    alert(xhr.responseJSON?.error || "Login failed");
                 }
-            } catch (err) {
-                alert('Error: ' + err.message);
-            }
+            });
         });
 
-        registerForm.addEventListener('submit', async (e) => {
+        $('#register-form').on('submit', function(e) {
             e.preventDefault();
-            const formData = new FormData(e.target);
-            const password = formData.get('password');
-            const confirmPassword = formData.get('confirmPassword');
-            
+            var formData = $(this).serializeArray();
+            var data = {};
+            $.each(formData, function(i, v){
+                data[v.name] = v.value;
+            });
+            var password = data['password'] || '';
+            var confirmPassword = data['confirmPassword'] || '';
             // Password confirmation check
             if (password !== confirmPassword) {
                 alert('Passwords do not match!');
                 return;
             }
-            
-            const userData = {
-                firstName: formData.get('firstName'),
-                lastName: formData.get('lastName'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                password: password
-            };
-            
+            // Xóa confirmPassword khỏi data gửi lên server
+            delete data['confirmPassword'];
             // Simulate registration process
-            console.log('Registration attempt:', userData);
-            
-            try {
-                const response = await fetch(`${API_URL}/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData)
-                });
-                if (response.ok) {
-                    document.getElementById('success-modal').classList.remove('hidden');
-                } else {
-                    const data = await response.json();
-                    alert(data.error || 'Registration failed');
+            console.log('Registration attempt:', data);
+            $.ajax({
+                type: "POST",
+                url: `${API_URL}/register`,
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(response) {
+                    $('#success-modal').removeClass('hidden');
+                },
+                error: function(xhr) {
+                    alert(xhr.responseJSON?.error || 'Registration failed');
                 }
-            } catch (err) {
-                alert('Error: ' + err.message);
-            }
-            
+            });
         });
 
         // Close modal and redirect
-        document.getElementById('close-modal').addEventListener('click', () => {
-            document.getElementById('success-modal').classList.add('hidden');
+        $('#close-modal').on('click', function() {
+            $('#success-modal').addClass('hidden');
             window.location.href = 'dashboard.html';
         });
 
@@ -467,7 +437,7 @@
         if (existingUser) {
             // Show option to continue to dashboard
             const userInfo = JSON.parse(existingUser);
-            authSubtitle.innerHTML = `Welcome back, ${userInfo.firstName || userInfo.email}! <a href="dashboard.html" class="text-emerald-600 hover:text-emerald-700 font-medium">Go to Dashboard</a>`;
+            $('#auth-subtitle').html(`Welcome back, ${userInfo.firstName || userInfo.email}! <a href="dashboard.html" class="text-emerald-600 hover:text-emerald-700 font-medium">Go to Dashboard</a>`);
         }
     </script>
 </body>

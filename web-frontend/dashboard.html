@@ -261,205 +261,207 @@
         </div>
     </main>
 
+    <script src="assets/js/jquery-3.7.1.min.js"></script>
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+        // Sử dụng jQuery cho toàn bộ logic
+        $(function() {
+            // Initialize Lucide icons
+            lucide.createIcons();
 
-        // Load user data
-        const userData = JSON.parse(localStorage.getItem('bikeguard_user') || '{}');
-        
-        // Update user name in header and welcome message
-        if (userData.firstName) {
-            document.getElementById('user-name').textContent = userData.firstName;
-            document.getElementById('welcome-name').textContent = userData.firstName;
-        } 
-        else if (userData.email) {
-            document.getElementById('user-name').textContent = userData.email.split('@')[0];
-            document.getElementById('welcome-name').textContent = userData.email.split('@')[0];
-        }
-
-        // User menu toggle
-        const userMenuBtn = document.getElementById('user-menu-btn');
-        const userMenu = document.getElementById('user-menu');
-        
-        userMenuBtn.addEventListener('click', () => {
-            userMenu.classList.toggle('hidden');
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
-                userMenu.classList.add('hidden');
+            // Load user data
+            var userData = JSON.parse(localStorage.getItem('bikeguard_user') || '{}');
+            
+            // Update user name in header and welcome message
+            if (userData.firstName) {
+                $('#user-name').text(userData.firstName);
+                $('#welcome-name').text(userData.firstName);
+            } else if (userData.email) {
+                var name = userData.email.split('@')[0];
+                $('#user-name').text(name);
+                $('#welcome-name').text(name);
             }
-        });
 
-        // Logout functionality
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            localStorage.removeItem('bikeguard_user');
-            window.location.href = 'auth.html';
-        });
+            // User menu toggle
+            $('#user-menu-btn').on('click', function(e) {
+                $('#user-menu').toggleClass('hidden');
+                e.stopPropagation();
+            });
 
-        // Check if user is logged in
-        if (!userData.email && !userData.firstName) {
-            window.location.href = 'auth.html';
-        }
+            // Close menu when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#user-menu-btn').length && !$(e.target).closest('#user-menu').length) {
+                    $('#user-menu').addClass('hidden');
+                }
+            });
 
-        // Giả lập vị trí xe máy 
-        const lat_bike = 13.856219
-        const lon_bike = 109.038577
+            // Logout functionality
+            $('#logout-btn').on('click', function() {
+                localStorage.removeItem('bikeguard_user');
+                window.location.href = 'auth.html';
+            });
 
-        navigator.geolocation.getCurrentPosition(function(position) {
-            const lat_user = position.coords.latitude;
-            const lon_user = position.coords.longitude;
-
-            // Tính khoảng cách
-            const distance = haversine(lat_user, lon_user, lat_bike, lon_bike);
-
-            // Hiển thị khoảng cách (làm tròn, đơn vị mét hoặc km)
-            let display = '';
-            if (distance >= 1000) {
-                display = (distance / 1000).toFixed(2) + ' km';
-            } else {
-                display = Math.round(distance) + ' m';
+            // Check if user is logged in
+            if (!userData.email && !userData.firstName) {
+                window.location.href = 'auth.html';
             }
-            document.getElementById('distance-value').textContent = display;
-        }, function() {
-            document.getElementById('distance-value').textContent = 'Không xác định';
-        });
 
-        function haversine(lat1, lon1, lat2, lon2) {
-            const R = 6371e3; // Bán kính Trái Đất (m)
-            const toRad = angle => angle * Math.PI / 180;
-            const dLat = toRad(lat2 - lat1);
-            const dLon = toRad(lon2 - lon1);
-            const a = Math.sin(dLat/2)**2 +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                Math.sin(dLon/2)**2;
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c; // khoảng cách tính bằng mét
-        }
+            // Giả lập vị trí xe máy 
+            var lat_bike = 13.856219;
+            var lon_bike = 109.038577;
 
-        const ctx = document.getElementById('vibrationChart').getContext('2d');
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat_user = position.coords.latitude;
+                var lon_user = position.coords.longitude;
 
-        // Tạo dữ liệu mẫu cho 12 giờ gần nhất
-        const hours = [];
-        const now = new Date();
-        for (let i = 11; i >= 0; i--) {
-            const d = new Date(now.getTime() - i * 60 * 60 * 1000);
-            hours.push(d.getHours() + ':00');
-        }
-        const vibrationData = Array.from({length: 12}, () => Math.floor(Math.random() * 10));
+                // Tính khoảng cách
+                var distance = haversine(lat_user, lon_user, lat_bike, lon_bike);
 
-        // Khởi tạo biểu đồ đường
-        const vibrationChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: hours,
-                datasets: [{
-                    label: 'Số lần rung lắc',
-                    data: vibrationData,
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16,185,129,0.1)',
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#10b981',
-                    pointBorderColor: '#fff',
-                    pointHoverRadius: 6,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => ` ${ctx.parsed.y} lần`
+                // Hiển thị khoảng cách (làm tròn, đơn vị mét hoặc km)
+                var display = '';
+                if (distance >= 1000) {
+                    display = (distance / 1000).toFixed(2) + ' km';
+                } else {
+                    display = Math.round(distance) + ' m';
+                }
+                $('#distance-value').text(display);
+            }, function() {
+                $('#distance-value').text('Không xác định');
+            });
+
+            function haversine(lat1, lon1, lat2, lon2) {
+                var R = 6371e3; // Bán kính Trái Đất (m)
+                var toRad = function(angle) { return angle * Math.PI / 180; };
+                var dLat = toRad(lat2 - lat1);
+                var dLon = toRad(lon2 - lon1);
+                var a = Math.sin(dLat/2)**2 +
+                    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                    Math.sin(dLon/2)**2;
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c; // khoảng cách tính bằng mét
+            }
+
+            var ctx = document.getElementById('vibrationChart').getContext('2d');
+
+            // Tạo dữ liệu mẫu cho 12 giờ gần nhất
+            var hours = [];
+            var now = new Date();
+            for (var i = 11; i >= 0; i--) {
+                var d = new Date(now.getTime() - i * 60 * 60 * 1000);
+                hours.push(d.getHours() + ':00');
+            }
+            var vibrationData = Array.from({length: 12}, function() { return Math.floor(Math.random() * 10); });
+
+            // Khởi tạo biểu đồ đường
+            var vibrationChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: hours,
+                    datasets: [{
+                        label: 'Số lần rung lắc',
+                        data: vibrationData,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16,185,129,0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#10b981',
+                        pointBorderColor: '#fff',
+                        pointHoverRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) { return ` ${ctx.parsed.y} lần`; }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            title: { display: false }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f3f4f6' },
+                            title: { display: false },
+                            ticks: { stepSize: 1 }
                         }
                     }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        title: { display: false }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#f3f4f6' },
-                        title: { display: false },
-                        ticks: { stepSize: 1 }
-                    }
                 }
-            }
-        });
+            });
 
-        // Initialize Leaflet map
-        const bikeLat = 21.028511, bikeLng = 105.804817;
-        const map = L.map('map').setView([bikeLat, bikeLng], 16);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-        L.marker([bikeLat, bikeLng]).addTo(map)
-            .bindPopup('Vị trí xe máy')
-            .openPopup();
+            // Initialize Leaflet map
+            var bikeLat = 21.028511, bikeLng = 105.804817;
+            var map = L.map('map').setView([bikeLat, bikeLng], 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            L.marker([bikeLat, bikeLng]).addTo(map)
+                .bindPopup('Vị trí xe máy')
+                .openPopup();
 
-        // Restore toggle states from localStorage
-        document.getElementById('alert-toggle').checked = localStorage.getItem('alert_toggle') === 'on';
-        document.getElementById('auto-toggle').checked = localStorage.getItem('auto_toggle') === 'on';
-        document.getElementById('alert-ring-toggle').checked = localStorage.getItem('alert_ring_toggle') === 'on';
-        // Save toggle state on change
-        document.getElementById('alert-toggle').addEventListener('change', function() {
-            localStorage.setItem('alert_toggle', this.checked ? 'on' : 'off');
-        });
-        document.getElementById('auto-toggle').addEventListener('change', function() {
-            localStorage.setItem('auto_toggle', this.checked ? 'on' : 'off');
-        });
-        document.getElementById('alert-ring-toggle').addEventListener('change', function() {
-            localStorage.setItem('alert_ring_toggle', this.checked ? 'on' : 'off');
-        });
-        lucide.createIcons();
-
-        // Show chatbox
-        document.getElementById('contact-support-btn').onclick = function() {
-            const chatbox = document.querySelector('#support-chatbox > div');
-            document.getElementById('support-chatbox').style.pointerEvents = 'auto';
-            chatbox.style.display = 'block';
+            // Restore toggle states from localStorage
+            $('#alert-toggle').prop('checked', localStorage.getItem('alert_toggle') === 'on');
+            $('#auto-toggle').prop('checked', localStorage.getItem('auto_toggle') === 'on');
+            $('#alert-ring-toggle').prop('checked', localStorage.getItem('alert_ring_toggle') === 'on');
+            // Save toggle state on change
+            $('#alert-toggle').on('change', function() {
+                localStorage.setItem('alert_toggle', this.checked ? 'on' : 'off');
+            });
+            $('#auto-toggle').on('change', function() {
+                localStorage.setItem('auto_toggle', this.checked ? 'on' : 'off');
+            });
+            $('#alert-ring-toggle').on('change', function() {
+                localStorage.setItem('alert_ring_toggle', this.checked ? 'on' : 'off');
+            });
             lucide.createIcons();
-        };
-        // Hide chatbox
-        document.getElementById('close-chatbox-btn').onclick = function() {
-            const chatbox = document.querySelector('#support-chatbox > div');
-            chatbox.style.display = 'none';
-            document.getElementById('support-chatbox').style.pointerEvents = 'none';
-        };
 
-        // Static bot reply on chat submit
-        const chatForm = document.querySelector('#support-chatbox form');
-        const chatInput = chatForm.querySelector('input[type="text"]');
-        const chatBody = chatForm.parentElement.querySelector('.p-4.h-64');
+            // Show chatbox
+            $('#contact-support-btn').on('click', function() {
+                var $chatbox = $('#support-chatbox > div');
+                $('#support-chatbox').css('pointer-events', 'auto');
+                $chatbox.show();
+                lucide.createIcons();
+            });
+            // Hide chatbox
+            $('#close-chatbox-btn').on('click', function() {
+                var $chatbox = $('#support-chatbox > div');
+                $chatbox.hide();
+                $('#support-chatbox').css('pointer-events', 'none');
+            });
 
-        chatForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const userMsg = chatInput.value.trim();
-            if (!userMsg) return;
-            // Append user message
-            const userDiv = document.createElement('div');
-            userDiv.className = 'self-end bg-emerald-100 text-emerald-900 px-3 py-2 rounded-lg mb-2';
-            userDiv.textContent = userMsg;
-            chatBody.appendChild(userDiv);
+            // Static bot reply on chat submit
+            var $chatForm = $('#support-chatbox form');
+            var $chatInput = $chatForm.find('input[type="text"]');
+            var $chatBody = $chatForm.parent().find('.p-4.h-64');
 
-            // Static bot reply
-            setTimeout(() => {
-                const botDiv = document.createElement('div');
-                botDiv.className = 'self-start bg-emerald-50 text-emerald-900 px-3 py-2 rounded-lg mb-2';
-                botDiv.textContent = 'Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất.';
-                chatBody.appendChild(botDiv);
-                chatBody.scrollTop = chatBody.scrollHeight;
-            }, 600);
+            $chatForm.on('submit', function(e) {
+                e.preventDefault();
+                var userMsg = $chatInput.val().trim();
+                if (!userMsg) return;
+                // Append user message
+                var $userDiv = $('<div>')
+                    .addClass('self-end bg-emerald-100 text-emerald-900 px-3 py-2 rounded-lg mb-2')
+                    .text(userMsg);
+                $chatBody.append($userDiv);
 
-            chatInput.value = '';
-            chatBody.scrollTop = chatBody.scrollHeight;
+                // Static bot reply
+                setTimeout(function() {
+                    var $botDiv = $('<div>')
+                        .addClass('self-start bg-emerald-50 text-emerald-900 px-3 py-2 rounded-lg mb-2')
+                        .text('Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất.');
+                    $chatBody.append($botDiv);
+                    $chatBody.scrollTop($chatBody[0].scrollHeight);
+                }, 600);
+
+                $chatInput.val('');
+                $chatBody.scrollTop($chatBody[0].scrollHeight);
+            });
         });
     </script>
 </body>
