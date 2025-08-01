@@ -10,13 +10,6 @@ CREATE TABLE users (
     last_name NVARCHAR(100),
     email NVARCHAR(255) UNIQUE,
     phone NVARCHAR(20),
-    password NVARCHAR(255)
+    password NVARCHAR(255),
+    configed_wifi INT DEFAULT 0
 );
-
-create table checkConfigWifi (
-    id INT,
-    configed INT,
-    FOREIGN key (id) REFERENCES users(id)
-);
-
-insert into checkConfigWifi(id, configed) values (1, 1), (2, 0), (3, 0);

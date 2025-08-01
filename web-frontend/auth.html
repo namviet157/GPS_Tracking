@@ -382,8 +382,7 @@
                 data: JSON.stringify(data),
                 contentType: "application/json",
                 dataType: "json",
-                success: function(response) {
-                    // Lưu thông tin user vào localStorage và chuyển hướng
+                success: function(response) {           
                     localStorage.setItem('bikeguard_user', JSON.stringify(response));
                     window.location.href = 'dashboard.html';
                 },
