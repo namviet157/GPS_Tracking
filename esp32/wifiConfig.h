@@ -506,12 +506,3 @@ public:
     webServer.handleClient(); //Luôn lắng nghe yêu cầu từ client
   }
 } wifiConfig;
-
-void setup() {
-  Serial.begin(115200);
-  wifiConfig.begin();
-}
-
-void loop() {
-  wifiConfig.run();
-}
