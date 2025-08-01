@@ -10,6 +10,5 @@ CREATE TABLE users (
     last_name NVARCHAR(100),
     email NVARCHAR(255) UNIQUE,
     phone NVARCHAR(20),
-    password NVARCHAR(255),
-    configed_wifi INT DEFAULT 0
+    password NVARCHAR(255)
 );
