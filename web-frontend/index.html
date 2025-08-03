@@ -1,578 +1,848 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BikeGuard - Smart 24/7 Motorbike Protection</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
-        }
-        .gradient-dark {
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-        }
-        .animate-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        .animate-ping {
-            animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
-        }
-        @keyframes ping {
-            75%, 100% {
-                transform: scale(2);
-                opacity: 0;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>BikeGuard - Smart 24/7 Motorbike Protection</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+        <style>
+            .gradient-bg {
+                background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
             }
-        }
-        .tab-active {
-            background-color: #059669;
-            color: white;
-        }
-        .tab-inactive {
-            color: #9ca3af;
-        }
-        .tab-inactive:hover {
-            color: white;
-        }
-    </style>
-</head>
-<body class="min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-emerald-100 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <i data-lucide="shield" class="h-8 w-8 text-emerald-600"></i>
-                    <span class="ml-2 text-xl font-bold text-gray-900">BikeGuard</span>
-                </div>
-
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex space-x-8">
-                    <a href="#home" class="text-gray-700 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors duration-200">Trang chủ</a>
-                    <a href="#setup" class="text-gray-700 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors duration-200">Cài đặt</a>
-                    <a href="#help" class="text-gray-700 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors duration-200">Trợ giúp</a>
-                    <a href="#dashboard" class="text-gray-700 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors duration-200">Theo dõi</a>
-                </nav>
-
-                <!-- CTA Button -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="auth.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center">
-                        <i data-lucide="log-in" class="h-5 w-5 mr-2"></i>
-                        Đăng nhập
-                    </a>
-                </div>
-
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-emerald-600 p-2">
-                        <i data-lucide="menu" class="h-6 w-6"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile Navigation -->
-            <div id="mobile-menu" class="md:hidden hidden">
-                <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-emerald-100">
-                    <a href="#home" class="text-gray-700 hover:text-emerald-600 block px-3 py-2 text-base font-medium">Trang chủ</a>
-                    <a href="#setup" class="text-gray-700 hover:text-emerald-600 block px-3 py-2 text-base font-medium">Cài đặt</a>
-                    <a href="#help" class="text-gray-700 hover:text-emerald-600 block px-3 py-2 text-base font-medium">Trợ giúp</a>
-                    <a href="#dashboard" class="text-gray-700 hover:text-emerald-600 block px-3 py-2 text-base font-medium">Theo dõi</a>
-                    <a href="auth.html" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 block text-center">
-                        Đăng nhập
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <!-- Hero Section -->
-        <section id="home" class="gradient-bg py-20">
+            .gradient-dark {
+                background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            }
+            .animate-pulse {
+                animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            }
+            .animate-ping {
+                animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+            }
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.5;
+                }
+            }
+            @keyframes ping {
+                75%,
+                100% {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+            .tab-active {
+                background-color: #059669;
+                color: white;
+            }
+            .tab-inactive {
+                color: #9ca3af;
+            }
+            .tab-inactive:hover {
+                color: white;
+            }
+        </style>
+    </head>
+    <body class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-emerald-100 sticky top-0 z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid lg:grid-cols-2 gap-12 items-center">
-                    <!-- Content -->
-                    <div class="text-center lg:text-left">
-                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                            Giám sát <span class="text-emerald-600">24/7</span> 
-                            <p>Bảo vệ Xe Máy Thông Minh</p>
-                        </h1>
-                        <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                            Công nghệ IoT tiên tiến giúp xe máy của bạn an toàn với tính năng theo dõi thời gian thực,
-                            cảnh báo trộm cắp tức thời và giám sát an ninh toàn diện.
-                        </p>
-                        
-                        <!-- Features List -->
-                        <div class="flex flex-col sm:flex-row gap-6 mb-8">
-                            <div class="flex items-center">
-                                <i data-lucide="shield" class="h-5 w-5 text-emerald-600 mr-2"></i>
-                                <span class="text-gray-700">Bảo vệ chống trộm</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i data-lucide="map-pin" class="h-5 w-5 text-emerald-600 mr-2"></i>
-                                <span class="text-gray-700">Theo dõi thời gian thực</span>
-                            </div>
-                            <div class="flex items-center">
-                                <i data-lucide="smartphone" class="h-5 w-5 text-emerald-600 mr-2"></i>
-                                <span class="text-gray-700">Cảnh báo di động</span>
-                            </div>
-                        </div>
-
-                        <!-- CTA Buttons -->
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="auth.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-medium text-lg transition-colors duration-200 text-center">
-                                Bắt đầu bảo vệ ngay bây giờ
-                            </a>
-                            <a href="https://a360.co/4k8PQJx" target="_blank" rel="noopener" class="border border-emerald-600 text-emerald-600 hover:bg-emerald-50 px-8 py-3 rounded-lg font-medium text-lg transition-colors duration-200 text-center">
-                                Xem bản demo
-                            </a>
-                        </div>
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <i data-lucide="shield" class="h-8 w-8 text-emerald-600"></i>
+                        <span class="ml-2 text-xl font-bold text-gray-900">BikeGuard</span>
                     </div>
 
-                    <!-- Product Image/Illustration -->
-                    <div class="relative">
-                        <div class="bg-white rounded-2xl shadow-2xl p-8 mx-auto max-w-xl">
-                            <div class="aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl flex items-center justify-center mb-6" style="min-height: 400px;">
-                                <!-- Autodesk Fusion 360 Viewer Embed -->
-                                <iframe
-                                    src="https://gmail5227282.autodesk360.com/g/shares/SH30dd5QT870c25f12fcd10c7f802b1a5997"
-                                    width="600"
-                                    height="450"
-                                    style="border:0; border-radius: 1rem; background: #f0fdfa;"
-                                    allowfullscreen
-                                    loading="lazy"
-                                    title="Mô phỏng sản phẩm BikeGuard"
-                                ></iframe>
-                            </div>
-                            <div class="text-center">
-                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Thiết bị Giám sát xe máy</h3>
-                                <p class="text-gray-600">Nhỏ gọn, chống chịu thời tiết và mạnh mẽ</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Floating Elements -->
-                        <div class="absolute -top-4 -right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
-                            Hoạt động 24/7
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+                    <!-- Desktop Navigation -->
+                    <nav class="hidden md:flex space-x-8">
+                        <a
+                            href="#home"
+                            class="text-gray-700 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                            >Trang chủ</a
+                        >
+                        <a
+                            href="#setup"
+                            class="text-gray-700 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                            >Cài đặt</a
+                        >
+                        <a
+                            href="#help"
+                            class="text-gray-700 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                            >Trợ giúp</a
+                        >
+                        <a
+                            href="#dashboard"
+                            class="text-gray-700 hover:text-emerald-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                            >Theo dõi</a
+                        >
+                    </nav>
 
-        <!-- Setup Guide Section -->
-        <section id="setup" class="py-20 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                        Thiết lập trong <span class="text-emerald-600">10 Phút</span>
-                    </h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Quy trình thiết lập đơn giản được thiết kế cho mọi người. Không yêu cầu chuyên môn kỹ thuật.
-                    </p>
-                </div>
-
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Step 1 -->
-                    <div class="relative bg-white border border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
-                        <div class="absolute -top-3 -left-3 bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">1</div>
-                        <div class="bg-emerald-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
-                            <i data-lucide="package" class="h-6 w-6 text-emerald-600"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Cài đặt thiết bị</h3>
-                        <p class="text-gray-600 mb-4 text-sm leading-relaxed">Lắp thiết bị BikeGuard nhỏ gọn một cách an toàn vào xe máy của bạn. Thiết kế chống chịu thời tiết đảm bảo độ bền.</p>
-                        <div class="inline-flex items-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">5 phút</div>
+                    <!-- CTA Button -->
+                    <div class="hidden md:flex items-center space-x-4">
+                        <a
+                            href="auth.html"
+                            class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center">
+                            <i data-lucide="log-in" class="h-5 w-5 mr-2"></i>
+                            Đăng nhập
+                        </a>
                     </div>
 
-                    <!-- Step 2 -->
-                    <div class="relative bg-white border border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
-                        <div class="absolute -top-3 -left-3 bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">2</div>
-                        <div class="bg-emerald-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
-                            <i data-lucide="settings" class="h-6 w-6 text-emerald-600"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Cài đặt cấu hình</h3>
-                        <p class="text-gray-600 mb-4 text-sm leading-relaxed">Sử dụng trang web của chúng tôi để thiết lập vùng an ninh, tùy chọn thông báo, bảng điều khiển.</p>
-                        <div class="inline-flex items-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">3 phút</div>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="relative bg-white border border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
-                        <div class="absolute -top-3 -left-3 bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">3</div>
-                        <div class="bg-emerald-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
-                            <i data-lucide="smartphone" class="h-6 w-6 text-emerald-600"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Kết nối Wifi</h3>
-                        <p class="text-gray-600 mb-4 text-sm leading-relaxed">Kết nối Wifi và ghép nối với thiết bị của bạn để theo dõi và kiểm soát theo thời gian thực.</p>
-                        <div class="inline-flex items-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">2 phút</div>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="relative bg-white border border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
-                        <div class="absolute -top-3 -left-3 bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">4</div>
-                        <div class="bg-emerald-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
-                            <i data-lucide="check-circle" class="h-6 w-6 text-emerald-600"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Tài sản của bạn được bảo vệ</h3>
-                        <p class="text-gray-600 mb-4 text-sm leading-relaxed">Xe máy của bạn giờ đây được bảo vệ 24/7 với khả năng theo dõi và cảnh báo tức thời.</p>
-                        <div class="inline-flex items-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">Luôn bật</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Dashboard Preview Section -->
-        <section id="dashboard" class="py-20 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                        Theo dõi xe đạp của bạn từ <span class="text-emerald-600">Bất cứ đâu</span>
-                    </h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Bảng điều khiển thời gian thực cung cấp cho bạn khả năng hiển thị và kiểm soát hoàn toàn tính bảo mật của xe máy.
-                    </p>
-                </div>
-                <!-- Dashboard Mockup -->
-                <div class="gradient-dark rounded-2xl p-6 shadow-2xl">
-                    <!-- Tab Navigation -->
-                    <div class="flex space-x-1 mb-6 bg-gray-800 rounded-lg p-1">
-                        <button id="tab-map" class="tab-active px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-                            Map View
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden">
+                        <button
+                            id="mobile-menu-btn"
+                            class="text-gray-700 hover:text-emerald-600 p-2">
+                            <i data-lucide="menu" class="h-6 w-6"></i>
                         </button>
                     </div>
-                    <!-- Tab Content -->
-                    <div id="content-map">
-                        <div class="bg-gray-900 rounded-xl p-8 mb-6">
-                            <div class="w-full h-96 rounded-lg overflow-hidden" id="user-map-container">
-                                <div id="user-map-loading" class="flex items-center justify-center h-full">
-                                    <span class="text-white">Đang lấy vị trí của bạn...</span>
-                                </div>
-                                <iframe
-                                    id="user-map-iframe"
-                                    width="100%"
-                                    height="100%"
-                                    style="border:0; min-height: 350px; display: none;"
-                                    loading="lazy"
-                                    allowfullscreen
-                                    referrerpolicy="no-referrer-when-downgrade"
-                                ></iframe>
-                                <div id="user-map-error" class="hidden text-center text-red-400 mt-4"></div>
-                            </div>
-                            <p class="text-white text-center mt-4">Bản đồ vị trí xe sẽ hiển thị theo vị trí hiện tại của bạn.</p>
-                        </div>
-                    </div>
                 </div>
-                <div class="max-w-6xl mx-auto">
 
-                    <!-- Features List -->
-                    <div class="grid md:grid-cols-3 gap-8 mt-12">
-                        <div class="text-center">
-                            <div class="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                <i data-lucide="map-pin" class="h-8 w-8 text-emerald-600"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Theo dõi thời gian thực</h3>
-                            <p class="text-gray-600">Theo dõi vị trí xe của bạn với độ chính xác cao</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                <i data-lucide="shield" class="h-8 w-8 text-emerald-600"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Cảnh báo tức thời</h3>
-                            <p class="text-gray-600">Nhận thông báo ngay lập tức khi phát hiện vấn đề không an toàn</p>
-                        </div>
-                        <div class="text-center">
-                            <div class="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                <i data-lucide="battery" class="h-8 w-8 text-emerald-600"></i>
-                            </div>
-                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Sử dụng nguổn điện từ acquy xe</h3>
-                            <p class="text-gray-600">Không cần phải sạc pin</p>
-                        </div>
+                <!-- Mobile Navigation -->
+                <div id="mobile-menu" class="md:hidden hidden">
+                    <div class="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-emerald-100">
+                        <a
+                            href="#home"
+                            class="text-gray-700 hover:text-emerald-600 block px-3 py-2 text-base font-medium"
+                            >Trang chủ</a
+                        >
+                        <a
+                            href="#setup"
+                            class="text-gray-700 hover:text-emerald-600 block px-3 py-2 text-base font-medium"
+                            >Cài đặt</a
+                        >
+                        <a
+                            href="#help"
+                            class="text-gray-700 hover:text-emerald-600 block px-3 py-2 text-base font-medium"
+                            >Trợ giúp</a
+                        >
+                        <a
+                            href="#dashboard"
+                            class="text-gray-700 hover:text-emerald-600 block px-3 py-2 text-base font-medium"
+                            >Theo dõi</a
+                        >
+                        <a
+                            href="auth.html"
+                            class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200 block text-center">
+                            Đăng nhập
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
+        </header>
 
-        <!-- Help Section -->
-        <section id="help" class="py-20 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                        <span class="text-emerald-600">Câu hỏi</span> thường gặp
-                    </h2>
-                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Nhận câu trả lời cho những câu hỏi thường gặp về thiết lập, tính năng và hỗ trợ của BikeGuard.
-                    </p>
-                </div>
+        <main>
+            <!-- Hero Section -->
+            <section id="home" class="gradient-bg py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid lg:grid-cols-2 gap-12 items-center">
+                        <!-- Content -->
+                        <div class="text-center lg:text-left">
+                            <h1
+                                class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+                                Giám sát <span class="text-emerald-600">24/7</span>
+                                <p>Bảo vệ Xe Máy Thông Minh</p>
+                            </h1>
+                            <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                                Công nghệ IoT tiên tiến giúp xe máy của bạn an toàn với tính năng
+                                theo dõi thời gian thực, cảnh báo trộm cắp tức thời và giám sát an
+                                ninh toàn diện.
+                            </p>
 
-                <div class="grid lg:grid-cols-2 gap-12 items-start">
-                    <!-- FAQ Section -->
-                    <div>
-                        <div class="space-y-4">
-                            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                                <button class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200" data-faq="0">
-                                    <span class="font-medium text-gray-900">Pin dùng được bao lâu?</span>
-                                    <i data-lucide="chevron-down" class="h-5 w-5 text-gray-400 faq-icon"></i>
-                                </button>
-                                <div class="faq-content px-6 pb-4 hidden">
-                                    <p class="text-gray-600 leading-relaxed">Thiết bị dùng nguồn điện trực tiếp từ xe không cần sạc hoặc thay pin.</p>
+                            <!-- Features List -->
+                            <div class="flex flex-col sm:flex-row gap-6 mb-8">
+                                <div class="flex items-center">
+                                    <i
+                                        data-lucide="shield"
+                                        class="h-5 w-5 text-emerald-600 mr-2"></i>
+                                    <span class="text-gray-700">Bảo vệ chống trộm</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i
+                                        data-lucide="map-pin"
+                                        class="h-5 w-5 text-emerald-600 mr-2"></i>
+                                    <span class="text-gray-700">Theo dõi thời gian thực</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i
+                                        data-lucide="smartphone"
+                                        class="h-5 w-5 text-emerald-600 mr-2"></i>
+                                    <span class="text-gray-700">Cảnh báo di động</span>
                                 </div>
                             </div>
 
-                            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                                <button class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200" data-faq="1">
-                                    <span class="font-medium text-gray-900">Sẽ thế nào nếu xe của tôi bị đánh cắp?</span>
-                                    <i data-lucide="chevron-down" class="h-5 w-5 text-gray-400 faq-icon"></i>
-                                </button>
-                                <div class="faq-content px-6 pb-4 hidden">
-                                    <p class="text-gray-600 leading-relaxed">Ngay khi phát hiện chuyển động rung động bất thường, BikeGuard sẽ gửi cảnh báo ngay lập tức đến điện thoại và email của bạn. Bạn có thể theo dõi vị trí xe đạp của mình theo thời gian thực và chia sẻ thông tin này với chính quyền địa phương.</p>
+                            <!-- CTA Buttons -->
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <a
+                                    href="auth.html"
+                                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-medium text-lg transition-colors duration-200 text-center">
+                                    Bắt đầu bảo vệ ngay bây giờ
+                                </a>
+                                <a
+                                    href="https://a360.co/4k8PQJx"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="border border-emerald-600 text-emerald-600 hover:bg-emerald-50 px-8 py-3 rounded-lg font-medium text-lg transition-colors duration-200 text-center">
+                                    Xem bản demo
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Product Image/Illustration -->
+                        <div class="relative">
+                            <div class="bg-white rounded-2xl shadow-2xl p-8 mx-auto max-w-xl">
+                                <div
+                                    class="aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-xl flex items-center justify-center mb-6"
+                                    style="min-height: 400px">
+                                    <!-- Autodesk Fusion 360 Viewer Embed -->
+                                    <iframe
+                                        src="https://gmail5227282.autodesk360.com/g/shares/SH30dd5QT870c25f12fcd10c7f802b1a5997"
+                                        width="600"
+                                        height="450"
+                                        style="border: 0; border-radius: 1rem; background: #f0fdfa"
+                                        allowfullscreen
+                                        loading="lazy"
+                                        title="Mô phỏng sản phẩm BikeGuard"></iframe>
+                                </div>
+                                <div class="text-center">
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                        Thiết bị Giám sát xe máy
+                                    </h3>
+                                    <p class="text-gray-600">
+                                        Nhỏ gọn, chống chịu thời tiết và mạnh mẽ
+                                    </p>
                                 </div>
                             </div>
 
-                            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                                <button class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200" data-faq="2">
-                                    <span class="font-medium text-gray-900">Thiết bị này có chống chịu được thời tiết không?</span>
-                                    <i data-lucide="chevron-down" class="h-5 w-5 text-gray-400 faq-icon"></i>
-                                </button>
-                                <div class="faq-content px-6 pb-4 hidden">
-                                    <p class="text-gray-600 leading-relaxed">Có, vỏ ngoài thiết bị giúp chống nước và chống bụi hoàn toàn. Nó được thiết kế để chịu được mọi điều kiện thời tiết bao gồm mưa lớn, tuyết và nhiệt độ khắc nghiệt.</p>
-                                </div>
-                            </div>
-
-                            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                                <button class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200" data-faq="3">
-                                    <span class="font-medium text-gray-900">Có thể theo dõi nhiều xe trên cùng một tài khoản không?</span>
-                                    <i data-lucide="chevron-down" class="h-5 w-5 text-gray-400 faq-icon"></i>
-                                </button>
-                                <div class="faq-content px-6 pb-4 hidden">
-                                    <p class="text-gray-600 leading-relaxed">Bạn có thể thêm và quản lý nhiều thiết bị BikeGuard trên cùng một tài khoản để theo dõi tất cả các xe của mình dễ dàng.</p>
-                                </div>
-                            </div>
-
-                            <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                                <button class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200" data-faq="4">
-                                    <span class="font-medium text-gray-900">Tôi có thể xem lại lịch sử di chuyển của xe không?</span>
-                                    <i data-lucide="chevron-down" class="h-5 w-5 text-gray-400 faq-icon"></i>
-                                </button>
-                                <div class="faq-content px-6 pb-4 hidden">
-                                    <p class="text-gray-600 leading-relaxed">Có, bạn có thể xem lại lịch sử di chuyển của xe trong bảng điều khiển để kiểm tra các tuyến đường đã đi.</p>
-                                </div>
+                            <!-- Floating Elements -->
+                            <div
+                                class="absolute -top-4 -right-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
+                                Hoạt động 24/7
                             </div>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <!-- Chatbox Section -->
-                    <div id="contact" class="w-full">
-                        <div class="bg-white rounded-xl shadow-lg p-6">
-                            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                <i data-lucide="message-circle" class="h-5 w-5 text-emerald-600 mr-2"></i>
-                                Hỗ trợ trực tuyến
+            <!-- Setup Guide Section -->
+            <section id="setup" class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                            Thiết lập trong <span class="text-emerald-600">10 Phút</span>
+                        </h2>
+                        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                            Quy trình thiết lập đơn giản được thiết kế cho mọi người. Không yêu cầu
+                            chuyên môn kỹ thuật.
+                        </p>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Step 1 -->
+                        <div
+                            class="relative bg-white border border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
+                            <div
+                                class="absolute -top-3 -left-3 bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                                1
+                            </div>
+                            <div
+                                class="bg-emerald-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <i data-lucide="package" class="h-6 w-6 text-emerald-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                Cài đặt thiết bị
                             </h3>
-                            <div id="chatbox-messages" class="h-64 overflow-y-auto bg-gray-50 rounded-lg p-4 mb-4 border border-gray-100 text-sm space-y-2">
-                                <div class="text-gray-500 text-center">Chào bạn! Bạn cần hỗ trợ gì? Hãy nhắn tin cho chúng tôi.</div>
+                            <p class="text-gray-600 mb-4 text-sm leading-relaxed">
+                                Lắp thiết bị BikeGuard nhỏ gọn một cách an toàn vào xe máy của bạn.
+                                Thiết kế chống chịu thời tiết đảm bảo độ bền.
+                            </p>
+                            <div
+                                class="inline-flex items-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">
+                                5 phút
                             </div>
-                            <form id="chatbox-form" class="flex">
-                                <input
-                                    id="chatbox-input"
-                                    type="text"
-                                    class="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:border-emerald-500"
-                                    placeholder="Nhập tin nhắn..."
-                                    autocomplete="off"
-                                    required
-                                />
-                                <button
-                                    type="submit"
-                                    class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-r-lg font-medium transition-colors duration-200"
-                                >
-                                    Gửi
-                                </button>
-                            </form>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div
+                            class="relative bg-white border border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
+                            <div
+                                class="absolute -top-3 -left-3 bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                                2
+                            </div>
+                            <div
+                                class="bg-emerald-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <i data-lucide="settings" class="h-6 w-6 text-emerald-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                Cài đặt cấu hình
+                            </h3>
+                            <p class="text-gray-600 mb-4 text-sm leading-relaxed">
+                                Sử dụng trang web của chúng tôi để thiết lập vùng an ninh, tùy chọn
+                                thông báo, bảng điều khiển.
+                            </p>
+                            <div
+                                class="inline-flex items-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">
+                                3 phút
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div
+                            class="relative bg-white border border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
+                            <div
+                                class="absolute -top-3 -left-3 bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                                3
+                            </div>
+                            <div
+                                class="bg-emerald-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <i data-lucide="smartphone" class="h-6 w-6 text-emerald-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Kết nối Wifi</h3>
+                            <p class="text-gray-600 mb-4 text-sm leading-relaxed">
+                                Kết nối Wifi và ghép nối với thiết bị của bạn để theo dõi và kiểm
+                                soát theo thời gian thực.
+                            </p>
+                            <div
+                                class="inline-flex items-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">
+                                2 phút
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div
+                            class="relative bg-white border border-gray-200 rounded-xl p-6 hover:border-emerald-300 hover:shadow-lg transition-all duration-300">
+                            <div
+                                class="absolute -top-3 -left-3 bg-emerald-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                                4
+                            </div>
+                            <div
+                                class="bg-emerald-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <i data-lucide="check-circle" class="h-6 w-6 text-emerald-600"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                Tài sản của bạn được bảo vệ
+                            </h3>
+                            <p class="text-gray-600 mb-4 text-sm leading-relaxed">
+                                Xe máy của bạn giờ đây được bảo vệ 24/7 với khả năng theo dõi và
+                                cảnh báo tức thời.
+                            </p>
+                            <div
+                                class="inline-flex items-center bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-medium">
+                                Luôn bật
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <!-- Main Footer Content -->
-            <div class="grid lg:grid-cols-6 gap-8 mb-12">
-                <!-- Brand Section -->
-                <div class="lg:col-span-2">
-                    <div class="flex items-center mb-4">
-                        <i data-lucide="shield" class="h-8 w-8 text-emerald-500"></i>
-                        <span class="ml-2 text-xl font-bold">BikeGuard</span>
+            <!-- Dashboard Preview Section -->
+            <section id="dashboard" class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                            Theo dõi xe đạp của bạn từ
+                            <span class="text-emerald-600">Bất cứ đâu</span>
+                        </h2>
+                        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                            Bảng điều khiển thời gian thực cung cấp cho bạn khả năng hiển thị và
+                            kiểm soát hoàn toàn tính bảo mật của xe máy.
+                        </p>
                     </div>
-                    <p class="text-gray-400 mb-6 leading-relaxed">
-                        Công nghệ IoT tiên tiến cho khả năng theo dõi và bảo mật xe máy toàn diện.
-                        Bảo vệ chuyến đi của bạn với tính năng giám sát 24/7 và cảnh báo tức thời.
-                    </p>
-                    
+                    <!-- Dashboard Mockup -->
+                    <div class="gradient-dark rounded-2xl p-6 shadow-2xl">
+                        <!-- Tab Navigation -->
+                        <div class="flex space-x-1 mb-6 bg-gray-800 rounded-lg p-1">
+                            <button
+                                id="tab-map"
+                                class="tab-active px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                                Map View
+                            </button>
+                        </div>
+                        <!-- Tab Content -->
+                        <div id="content-map">
+                            <div class="bg-gray-900 rounded-xl p-8 mb-6">
+                                <div
+                                    class="w-full h-96 rounded-lg overflow-hidden"
+                                    id="user-map-container">
+                                    <div
+                                        id="user-map-loading"
+                                        class="flex items-center justify-center h-full">
+                                        <span class="text-white">Đang lấy vị trí của bạn...</span>
+                                    </div>
+                                    <iframe
+                                        id="user-map-iframe"
+                                        width="100%"
+                                        height="100%"
+                                        style="border: 0; min-height: 350px; display: none"
+                                        loading="lazy"
+                                        allowfullscreen
+                                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                    <div
+                                        id="user-map-error"
+                                        class="hidden text-center text-red-400 mt-4"></div>
+                                </div>
+                                <p class="text-white text-center mt-4">
+                                    Bản đồ vị trí xe sẽ hiển thị theo vị trí hiện tại của bạn.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="max-w-6xl mx-auto">
+                        <!-- Features List -->
+                        <div class="grid md:grid-cols-3 gap-8 mt-12">
+                            <div class="text-center">
+                                <div
+                                    class="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                    <i data-lucide="map-pin" class="h-8 w-8 text-emerald-600"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                    Theo dõi thời gian thực
+                                </h3>
+                                <p class="text-gray-600">
+                                    Theo dõi vị trí xe của bạn với độ chính xác cao
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <div
+                                    class="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                    <i data-lucide="shield" class="h-8 w-8 text-emerald-600"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                    Cảnh báo tức thời
+                                </h3>
+                                <p class="text-gray-600">
+                                    Nhận thông báo ngay lập tức khi phát hiện vấn đề không an toàn
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <div
+                                    class="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                                    <i data-lucide="battery" class="h-8 w-8 text-emerald-600"></i>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                                    Sử dụng nguổn điện từ acquy xe
+                                </h3>
+                                <p class="text-gray-600">Không cần phải sạc pin</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Help Section -->
+            <section id="help" class="py-20 bg-gray-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                            <span class="text-emerald-600">Câu hỏi</span> thường gặp
+                        </h2>
+                        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                            Nhận câu trả lời cho những câu hỏi thường gặp về thiết lập, tính năng và
+                            hỗ trợ của BikeGuard.
+                        </p>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-12 items-start">
+                        <!-- FAQ Section -->
+                        <div>
+                            <div class="space-y-4">
+                                <div
+                                    class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                    <button
+                                        class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+                                        data-faq="0">
+                                        <span class="font-medium text-gray-900"
+                                            >Pin dùng được bao lâu?</span
+                                        >
+                                        <i
+                                            data-lucide="chevron-down"
+                                            class="h-5 w-5 text-gray-400 faq-icon"></i>
+                                    </button>
+                                    <div class="faq-content px-6 pb-4 hidden">
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Thiết bị dùng nguồn điện trực tiếp từ xe không cần sạc
+                                            hoặc thay pin.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                    <button
+                                        class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+                                        data-faq="1">
+                                        <span class="font-medium text-gray-900"
+                                            >Sẽ thế nào nếu xe của tôi bị đánh cắp?</span
+                                        >
+                                        <i
+                                            data-lucide="chevron-down"
+                                            class="h-5 w-5 text-gray-400 faq-icon"></i>
+                                    </button>
+                                    <div class="faq-content px-6 pb-4 hidden">
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Ngay khi phát hiện chuyển động rung động bất thường,
+                                            BikeGuard sẽ gửi cảnh báo ngay lập tức đến điện thoại và
+                                            email của bạn. Bạn có thể theo dõi vị trí xe đạp của
+                                            mình theo thời gian thực và chia sẻ thông tin này với
+                                            chính quyền địa phương.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                    <button
+                                        class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+                                        data-faq="2">
+                                        <span class="font-medium text-gray-900"
+                                            >Thiết bị này có chống chịu được thời tiết không?</span
+                                        >
+                                        <i
+                                            data-lucide="chevron-down"
+                                            class="h-5 w-5 text-gray-400 faq-icon"></i>
+                                    </button>
+                                    <div class="faq-content px-6 pb-4 hidden">
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Có, vỏ ngoài thiết bị giúp chống nước và chống bụi hoàn
+                                            toàn. Nó được thiết kế để chịu được mọi điều kiện thời
+                                            tiết bao gồm mưa lớn, tuyết và nhiệt độ khắc nghiệt.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                    <button
+                                        class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+                                        data-faq="3">
+                                        <span class="font-medium text-gray-900"
+                                            >Có thể theo dõi nhiều xe trên cùng một tài khoản
+                                            không?</span
+                                        >
+                                        <i
+                                            data-lucide="chevron-down"
+                                            class="h-5 w-5 text-gray-400 faq-icon"></i>
+                                    </button>
+                                    <div class="faq-content px-6 pb-4 hidden">
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Bạn có thể thêm và quản lý nhiều thiết bị BikeGuard trên
+                                            cùng một tài khoản để theo dõi tất cả các xe của mình dễ
+                                            dàng.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                                    <button
+                                        class="faq-btn w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+                                        data-faq="4">
+                                        <span class="font-medium text-gray-900"
+                                            >Tôi có thể xem lại lịch sử di chuyển của xe
+                                            không?</span
+                                        >
+                                        <i
+                                            data-lucide="chevron-down"
+                                            class="h-5 w-5 text-gray-400 faq-icon"></i>
+                                    </button>
+                                    <div class="faq-content px-6 pb-4 hidden">
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Có, bạn có thể xem lại lịch sử di chuyển của xe trong
+                                            bảng điều khiển để kiểm tra các tuyến đường đã đi.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chatbox Section -->
+                        <div id="contact" class="w-full">
+                            <div class="bg-white rounded-xl shadow-lg p-6">
+                                <h3
+                                    class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                                    <i
+                                        data-lucide="message-circle"
+                                        class="h-5 w-5 text-emerald-600 mr-2"></i>
+                                    Hỗ trợ trực tuyến
+                                </h3>
+                                <div
+                                    id="chatbox-messages"
+                                    class="h-64 overflow-y-auto bg-gray-50 rounded-lg p-4 mb-4 border border-gray-100 text-sm space-y-2">
+                                    <div class="text-gray-500 text-center">
+                                        Chào bạn! Bạn cần hỗ trợ gì? Hãy nhắn tin cho chúng tôi.
+                                    </div>
+                                </div>
+                                <form id="chatbox-form" class="flex">
+                                    <input
+                                        id="chatbox-input"
+                                        type="text"
+                                        class="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:border-emerald-500"
+                                        placeholder="Nhập tin nhắn..."
+                                        autocomplete="off"
+                                        required />
+                                    <button
+                                        type="submit"
+                                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-r-lg font-medium transition-colors duration-200">
+                                        Gửi
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <!-- Main Footer Content -->
+                <div class="grid lg:grid-cols-6 gap-8 mb-12">
+                    <!-- Brand Section -->
+                    <div class="lg:col-span-2">
+                        <div class="flex items-center mb-4">
+                            <i data-lucide="shield" class="h-8 w-8 text-emerald-500"></i>
+                            <span class="ml-2 text-xl font-bold">BikeGuard</span>
+                        </div>
+                        <p class="text-gray-400 mb-6 leading-relaxed">
+                            Công nghệ IoT tiên tiến cho khả năng theo dõi và bảo mật xe máy toàn
+                            diện. Bảo vệ chuyến đi của bạn với tính năng giám sát 24/7 và cảnh báo
+                            tức thời.
+                        </p>
+                    </div>
+
+                    <!-- Links Sections -->
+                    <div>
+                        <h3 class="text-white font-semibold mb-4">Product</h3>
+                        <ul class="space-y-2">
+                            <li>
+                                <a
+                                    href="#setup"
+                                    class="text-gray-400 hover:text-emerald-400 transition-colors duration-200"
+                                    >Setup Guide</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="#dashboard"
+                                    class="text-gray-400 hover:text-emerald-400 transition-colors duration-200"
+                                    >Dashboard</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-semibold mb-4">Support</h3>
+                        <ul class="space-y-2">
+                            <li>
+                                <a
+                                    href="#help"
+                                    class="text-gray-400 hover:text-emerald-400 transition-colors duration-200"
+                                    >Help Center</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="#contact"
+                                    class="text-gray-400 hover:text-emerald-400 transition-colors duration-200"
+                                    >Contact Support</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="#tutorials"
+                                    class="text-gray-400 hover:text-emerald-400 transition-colors duration-200"
+                                    >Video Tutorials</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-                <!-- Links Sections -->
-                <div>
-                    <h3 class="text-white font-semibold mb-4">Product</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#setup" class="text-gray-400 hover:text-emerald-400 transition-colors duration-200">Setup Guide</a></li>
-                        <li><a href="#dashboard" class="text-gray-400 hover:text-emerald-400 transition-colors duration-200">Dashboard</a></li>
-                    </ul>
-                </div>
+                <!-- Bottom Section -->
+                <div
+                    class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <p class="text-gray-400 text-sm">© 2025 BikeGuard. All rights reserved.</p>
+                    </div>
 
-                <div>
-                    <h3 class="text-white font-semibold mb-4">Support</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#help" class="text-gray-400 hover:text-emerald-400 transition-colors duration-200">Help Center</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-emerald-400 transition-colors duration-200">Contact Support</a></li>
-                        <li><a href="#tutorials" class="text-gray-400 hover:text-emerald-400 transition-colors duration-200">Video Tutorials</a></li>
-                    </ul>
+                    <!-- Social Links -->
+                    <div class="flex space-x-4">
+                        <a
+                            href="#"
+                            class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition-colors duration-200"
+                            aria-label="Facebook">
+                            <i data-lucide="facebook" class="h-5 w-5"></i>
+                        </a>
+                        <a
+                            href="#"
+                            class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition-colors duration-200"
+                            aria-label="Twitter">
+                            <i data-lucide="twitter" class="h-5 w-5"></i>
+                        </a>
+                        <a
+                            href="#"
+                            class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition-colors duration-200"
+                            aria-label="Instagram">
+                            <i data-lucide="instagram" class="h-5 w-5"></i>
+                        </a>
+                        <a
+                            href="#"
+                            class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition-colors duration-200"
+                            aria-label="LinkedIn">
+                            <i data-lucide="linkedin" class="h-5 w-5"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
+        </footer>
 
+        <script src="assets/js/jquery-3.7.1.min.js"></script>
+        <script>
+            // Initialize Lucide icons
+            lucide.createIcons();
 
-            <!-- Bottom Section -->
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <p class="text-gray-400 text-sm">
-                        © 2025 BikeGuard. All rights reserved.
-                    </p>
-                </div>
-
-                <!-- Social Links -->
-                <div class="flex space-x-4">
-                    <a href="#" class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition-colors duration-200" aria-label="Facebook">
-                        <i data-lucide="facebook" class="h-5 w-5"></i>
-                    </a>
-                    <a href="#" class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition-colors duration-200" aria-label="Twitter">
-                        <i data-lucide="twitter" class="h-5 w-5"></i>
-                    </a>
-                    <a href="#" class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition-colors duration-200" aria-label="Instagram">
-                        <i data-lucide="instagram" class="h-5 w-5"></i>
-                    </a>
-                    <a href="#" class="bg-gray-800 hover:bg-emerald-600 p-2 rounded-lg transition-colors duration-200" aria-label="LinkedIn">
-                        <i data-lucide="linkedin" class="h-5 w-5"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="assets/js/jquery-3.7.1.min.js"></script>
-    <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
-
-        // Sử dụng jQuery cho toàn bộ logic
-        $(function () {
-            // Mobile menu toggle
-            $('#mobile-menu-btn').on('click', function () {
-                $('#mobile-menu').toggleClass('hidden');
-            });
-
-            // Hiển thị bản đồ Google Maps theo vị trí hiện tại của người dùng
-            var $iframe = $('#user-map-iframe');
-            var $loading = $('#user-map-loading');
-            var $error = $('#user-map-error');
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        var lat = position.coords.latitude;
-                        var lng = position.coords.longitude;
-                        var url = 'https://www.openstreetmap.org/export/embed.html?bbox=' + (lng - 0.005) + ',' + (lat - 0.003) + ',' + (lng + 0.005) + ',' + (lat + 0.003) + '&layer=mapnik&marker=' + lat + ',' + lng;
-                        $iframe.attr('src', url).show();
-                        $loading.hide();
-                    },
-                    function (err) {
-                        $loading.hide();
-                        $error.text('Không thể lấy vị trí của bạn. Vui lòng cho phép truy cập vị trí hoặc thử lại.').removeClass('hidden');
-                    }
-                );
-            } else {
-                $loading.hide();
-                $error.text('Trình duyệt của bạn không hỗ trợ định vị vị trí.').removeClass('hidden');
-            }
-
-            // FAQ accordion
-            var $faqBtns = $('.faq-btn');
-            $faqBtns.on('click', function () {
-                var $btn = $(this);
-                var $content = $btn.next();
-                var $icon = $btn.find('.faq-icon');
-
-                // Close all other FAQs
-                $faqBtns.each(function () {
-                    if (this !== $btn[0]) {
-                        var $otherBtn = $(this);
-                        var $otherContent = $otherBtn.next();
-                        var $otherIcon = $otherBtn.find('.faq-icon');
-                        $otherContent.addClass('hidden');
-                        $otherIcon.attr('data-lucide', 'chevron-down');
-                    }
+            // Sử dụng jQuery cho toàn bộ logic
+            $(function () {
+                // Mobile menu toggle
+                $("#mobile-menu-btn").on("click", function () {
+                    $("#mobile-menu").toggleClass("hidden");
                 });
 
-                // Toggle current FAQ
-                if ($content.hasClass('hidden')) {
-                    $content.removeClass('hidden');
-                    $icon.attr('data-lucide', 'chevron-up');
+                // Hiển thị bản đồ Google Maps theo vị trí hiện tại của người dùng
+                var $iframe = $("#user-map-iframe");
+                var $loading = $("#user-map-loading");
+                var $error = $("#user-map-error");
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function (position) {
+                            var lat = position.coords.latitude;
+                            var lng = position.coords.longitude;
+                            var url =
+                                "https://www.openstreetmap.org/export/embed.html?bbox=" +
+                                (lng - 0.005) +
+                                "," +
+                                (lat - 0.003) +
+                                "," +
+                                (lng + 0.005) +
+                                "," +
+                                (lat + 0.003) +
+                                "&layer=mapnik&marker=" +
+                                lat +
+                                "," +
+                                lng;
+                            $iframe.attr("src", url).show();
+                            $loading.hide();
+                        },
+                        function (err) {
+                            $loading.hide();
+                            $error
+                                .text(
+                                    "Không thể lấy vị trí của bạn. Vui lòng cho phép truy cập vị trí hoặc thử lại."
+                                )
+                                .removeClass("hidden");
+                        }
+                    );
                 } else {
-                    $content.addClass('hidden');
-                    $icon.attr('data-lucide', 'chevron-down');
+                    $loading.hide();
+                    $error
+                        .text("Trình duyệt của bạn không hỗ trợ định vị vị trí.")
+                        .removeClass("hidden");
                 }
 
-                // Reinitialize icons
-                lucide.createIcons();
-            });
+                // FAQ accordion
+                var $faqBtns = $(".faq-btn");
+                $faqBtns.on("click", function () {
+                    var $btn = $(this);
+                    var $content = $btn.next();
+                    var $icon = $btn.find(".faq-icon");
 
-            // Simple chatbox logic: just display user messages and a static bot reply
-            var $chatForm = $('#chatbox-form');
-            var $chatInput = $('#chatbox-input');
-            var $chatMessages = $('#chatbox-messages');
+                    // Close all other FAQs
+                    $faqBtns.each(function () {
+                        if (this !== $btn[0]) {
+                            var $otherBtn = $(this);
+                            var $otherContent = $otherBtn.next();
+                            var $otherIcon = $otherBtn.find(".faq-icon");
+                            $otherContent.addClass("hidden");
+                            $otherIcon.attr("data-lucide", "chevron-down");
+                        }
+                    });
 
-            $chatForm.on('submit', function (e) {
-                e.preventDefault();
-                var msg = $chatInput.val().trim();
-                if (!msg) return;
-                // Append user message
-                var $userMsg = $('<div class="text-right"></div>').html('<span class="inline-block bg-emerald-100 text-emerald-800 px-3 py-2 rounded-lg mb-1">' + $('<div>').text(msg).html() + '</span>');
-                $chatMessages.append($userMsg);
-                $chatMessages.scrollTop($chatMessages[0].scrollHeight);
-                $chatInput.val('');
+                    // Toggle current FAQ
+                    if ($content.hasClass("hidden")) {
+                        $content.removeClass("hidden");
+                        $icon.attr("data-lucide", "chevron-up");
+                    } else {
+                        $content.addClass("hidden");
+                        $icon.attr("data-lucide", "chevron-down");
+                    }
 
-                // Static bot reply
-                setTimeout(function () {
-                    var $botMsg = $('<div class="text-left"></div>').html('<span class="inline-block bg-gray-200 text-gray-700 px-3 py-2 rounded-lg mb-1">Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.</span>');
-                    $chatMessages.append($botMsg);
-                    $chatMessages.scrollTop($chatMessages[0].scrollHeight);
-                }, 600);
-            });
-
-            // Smooth scrolling for anchor links
-            $('a[href^="#"]').on('click', function (e) {
-                e.preventDefault();
-                var target = $($(this).attr('href'));
-                if (target.length) {
-                    $('html, body').animate({
-                        scrollTop: target.offset().top
-                    }, 500);
-                }
-            });
-
-            // Check if user is already logged in and show personalized content
-            var existingUser = localStorage.getItem('bikeguard_user');
-            if (existingUser) {
-                $('a[href="auth.html"]').each(function () {
-                    $(this)
-                        .attr('href', 'dashboard.html')
-                        .html('<span class="flex items-center"><i data-lucide="layout-dashboard" class="h-5 w-5 mr-2"></i>Bảng điều khiển</span>');
+                    // Reinitialize icons
+                    lucide.createIcons();
                 });
-                lucide.createIcons();
-            }
-        });
-    </script>
-</body>
+
+                // Simple chatbox logic: just display user messages and a static bot reply
+                var $chatForm = $("#chatbox-form");
+                var $chatInput = $("#chatbox-input");
+                var $chatMessages = $("#chatbox-messages");
+
+                $chatForm.on("submit", function (e) {
+                    e.preventDefault();
+                    var msg = $chatInput.val().trim();
+                    if (!msg) return;
+                    // Append user message
+                    var $userMsg = $('<div class="text-right"></div>').html(
+                        '<span class="inline-block bg-emerald-100 text-emerald-800 px-3 py-2 rounded-lg mb-1">' +
+                            $("<div>").text(msg).html() +
+                            "</span>"
+                    );
+                    $chatMessages.append($userMsg);
+                    $chatMessages.scrollTop($chatMessages[0].scrollHeight);
+                    $chatInput.val("");
+
+                    // Static bot reply
+                    setTimeout(function () {
+                        var $botMsg = $('<div class="text-left"></div>').html(
+                            '<span class="inline-block bg-gray-200 text-gray-700 px-3 py-2 rounded-lg mb-1">Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.</span>'
+                        );
+                        $chatMessages.append($botMsg);
+                        $chatMessages.scrollTop($chatMessages[0].scrollHeight);
+                    }, 600);
+                });
+
+                // Smooth scrolling for anchor links
+                $('a[href^="#"]').on("click", function (e) {
+                    e.preventDefault();
+                    var target = $($(this).attr("href"));
+                    if (target.length) {
+                        $("html, body").animate(
+                            {
+                                scrollTop: target.offset().top,
+                            },
+                            500
+                        );
+                    }
+                });
+
+                // Check if user is already logged in and show personalized content
+                var existingUser = localStorage.getItem("bikeguard_user");
+                if (existingUser) {
+                    $('a[href="auth.html"]').each(function () {
+                        $(this)
+                            .attr("href", "dashboard.html")
+                            .html(
+                                '<span class="flex items-center"><i data-lucide="layout-dashboard" class="h-5 w-5 mr-2"></i>Bảng điều khiển</span>'
+                            );
+                    });
+                    lucide.createIcons();
+                }
+            });
+        </script>
+    </body>
 </html>
