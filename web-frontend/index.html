@@ -719,42 +719,129 @@
                 var $loading = $("#user-map-loading");
                 var $error = $("#user-map-error");
 
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        function (position) {
-                            var lat = position.coords.latitude;
-                            var lng = position.coords.longitude;
-                            var url =
-                                "https://www.openstreetmap.org/export/embed.html?bbox=" +
-                                (lng - 0.005) +
-                                "," +
-                                (lat - 0.003) +
-                                "," +
-                                (lng + 0.005) +
-                                "," +
-                                (lat + 0.003) +
-                                "&layer=mapnik&marker=" +
-                                lat +
-                                "," +
-                                lng;
-                            $iframe.attr("src", url).show();
-                            $loading.hide();
-                        },
-                        function (err) {
-                            $loading.hide();
-                            $error
-                                .text(
-                                    "Không thể lấy vị trí của bạn. Vui lòng cho phép truy cập vị trí hoặc thử lại."
-                                )
-                                .removeClass("hidden");
-                        }
-                    );
-                } else {
+                // Hàm hiển thị bản đồ với vị trí mặc định
+                function showDefaultMap() {
+                    // Vị trí mặc định: Hà Nội
+                    var defaultLat = 10.762833
+                    var defaultLng = 106.682461
+                    var url =
+                        "https://www.openstreetmap.org/export/embed.html?bbox=" +
+                        (defaultLng - 0.005) +
+                        "," +
+                        (defaultLat - 0.003) +
+                        "," +
+                        (defaultLng + 0.005) +
+                        "," +
+                        (defaultLat + 0.003) +
+                        "&layer=mapnik&marker=" +
+                        defaultLat +
+                        "," +
+                        defaultLng;
+                    $iframe.attr("src", url).show();
                     $loading.hide();
+                    
+                    // Hiển thị thông báo thân thiện
                     $error
-                        .text("Trình duyệt của bạn không hỗ trợ định vị vị trí.")
+                        .html('<div class="text-center"><i data-lucide="map-pin" class="h-6 w-6 mx-auto mb-2 text-emerald-600"></i><p class="text-sm text-gray-600">Đang hiển thị vị trí mặc định (Hà Nội)</p><button id="retry-location" class="mt-2 text-emerald-600 hover:text-emerald-700 text-sm underline">Thử lại vị trí của tôi</button></div>')
                         .removeClass("hidden");
+                    
+                    // Thêm sự kiện cho nút thử lại
+                    $("#retry-location").on("click", function() {
+                        $error.addClass("hidden");
+                        $loading.removeClass("hidden");
+                        $iframe.hide();
+                        getUserLocation();
+                    });
+                    
+                    lucide.createIcons();
                 }
+
+                // Hàm lấy vị trí người dùng
+                function getUserLocation() {
+                    if (navigator.geolocation) {
+                        // Tùy chọn cho geolocation
+                        var options = {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 300000 // 5 phút
+                        };
+
+                        navigator.geolocation.getCurrentPosition(
+                            function (position) {
+                                var lat = position.coords.latitude;
+                                var lng = position.coords.longitude;
+                                var url =
+                                    "https://www.openstreetmap.org/export/embed.html?bbox=" +
+                                    (lng - 0.005) +
+                                    "," +
+                                    (lat - 0.003) +
+                                    "," +
+                                    (lng + 0.005) +
+                                    "," +
+                                    (lat + 0.003) +
+                                    "&layer=mapnik&marker=" +
+                                    lat +
+                                    "," +
+                                    lng;
+                                $iframe.attr("src", url).show();
+                                $loading.hide();
+                                $error.addClass("hidden");
+                            },
+                            function (err) {
+                                $loading.hide();
+                                var errorMessage = "";
+                                
+                                switch(err.code) {
+                                    case err.PERMISSION_DENIED:
+                                        errorMessage = "Quyền truy cập vị trí bị từ chối. Vui lòng cho phép truy cập vị trí trong cài đặt trình duyệt.";
+                                        // Hiển thị bản đồ mặc định khi bị từ chối quyền
+                                        showDefaultMap();
+                                        return;
+                                    case err.POSITION_UNAVAILABLE:
+                                        errorMessage = "Thông tin vị trí không khả dụng. Vui lòng thử lại sau.";
+                                        // Hiển thị bản đồ mặc định
+                                        showDefaultMap();
+                                        return;
+                                    case err.TIMEOUT:
+                                        errorMessage = "Hết thời gian chờ lấy vị trí. Vui lòng thử lại.";
+                                        // Hiển thị bản đồ mặc định
+                                        showDefaultMap();
+                                        return;
+                                    default:
+                                        errorMessage = "Không thể lấy vị trí của bạn. Vui lòng thử lại sau.";
+                                        // Hiển thị bản đồ mặc định
+                                        showDefaultMap();
+                                        return;
+                                }
+                                
+                                // Chỉ hiển thị thông báo lỗi nếu không phải các trường hợp đã xử lý ở trên
+                                $error
+                                    .html('<div class="text-center"><i data-lucide="alert-circle" class="h-6 w-6 mx-auto mb-2 text-orange-500"></i><p class="text-sm text-gray-600 mb-2">' + errorMessage + '</p><button id="retry-location" class="text-emerald-600 hover:text-emerald-700 text-sm underline">Thử lại</button></div>')
+                                    .removeClass("hidden");
+                                
+                                // Thêm sự kiện cho nút thử lại
+                                $("#retry-location").on("click", function() {
+                                    $error.addClass("hidden");
+                                    $loading.removeClass("hidden");
+                                    $iframe.hide();
+                                    getUserLocation();
+                                });
+                                
+                                lucide.createIcons();
+                            },
+                            options
+                        );
+                    } else {
+                        $loading.hide();
+                        $error
+                            .html('<div class="text-center"><i data-lucide="alert-triangle" class="h-6 w-6 mx-auto mb-2 text-red-500"></i><p class="text-sm text-gray-600">Trình duyệt của bạn không hỗ trợ định vị vị trí.</p></div>')
+                            .removeClass("hidden");
+                        lucide.createIcons();
+                    }
+                }
+
+                // Bắt đầu lấy vị trí
+                getUserLocation();
 
                 // FAQ accordion
                 var $faqBtns = $(".faq-btn");

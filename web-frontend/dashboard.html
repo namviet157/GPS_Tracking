@@ -48,19 +48,32 @@
             .tab-inactive:hover {
                 color: white;
             }
-            .slide-in {
-                animation: slideIn 0.5s ease-out;
-            }
-            @keyframes slideIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
+                         .slide-in {
+                 animation: slideIn 0.5s ease-out;
+             }
+             @keyframes slideIn {
+                 from {
+                     opacity: 0;
+                     transform: translateY(20px);
+                 }
+                 to {
+                     opacity: 1;
+                     transform: translateY(0);
+                 }
+             }
+             
+             /* Chatbox specific styles */
+             #support-chatbox {
+                 transition: all 0.3s ease;
+             }
+             
+             #support-chatbox:not(:visible) {
+                 pointer-events: none;
+             }
+             
+             #support-chatbox:visible {
+                 pointer-events: auto;
+             }
         </style>
     </head>
     <body class="min-h-screen bg-gray-50">
@@ -147,13 +160,13 @@
                             <div id="map" class="relative h-80 rounded-lg overflow-hidden"></div>
                             <div class="mt-4 flex items-center justify-between">
                                 <div class="text-sm text-gray-600">
-                                    <span class="font-medium">Last seen:</span> 2 minutes ago
+                                    <span class="font-medium">Cập nhật cuối:</span> <span id="last-seen-time">Đang chờ...</span>
                                 </div>
                                 <a
-                                    href="https://www.google.com/maps/search/?api=1&query=21.028511,105.804817"
+                                    href="https://www.google.com/maps/search/?api=1&query=10.762833,106.682461"
                                     target="_blank"
                                     class="text-emerald-600 hover:text-emerald-700 font-medium text-sm">
-                                    View Full Map
+                                    Xem bản đồ đầy đủ
                                 </a>
                             </div>
                         </div>
@@ -272,17 +285,21 @@
                         </svg>
                     </button>
                 </div>
-                <!-- Chatbox Modal -->
-                <div
-                    id="support-chatbox"
-                    class="fixed inset-0 z-50 flex items-end justify-end px-4 py-8 pointer-events-none">
-                    <div
-                        class="w-full max-w-sm bg-white rounded-xl shadow-2xl border border-emerald-200 slide-in pointer-events-auto"
-                        style="display: none">
+                                 <!-- Chatbox Modal -->
+                 <div
+                     id="support-chatbox"
+                     class="fixed inset-0 z-50 flex items-end justify-end px-4 py-8"
+                     style="display: none; pointer-events: none;">
+                     <div
+                         class="w-full max-w-sm bg-white rounded-xl shadow-2xl border border-emerald-200 slide-in"
+                         style="pointer-events: auto;">
                         <div class="flex items-center justify-between p-4 border-b border-gray-100">
                             <div class="flex items-center space-x-2">
                                 <i data-lucide="headphones" class="h-5 w-5 text-emerald-600"></i>
                                 <span class="font-semibold text-gray-900">Support Chat</span>
+                                <div id="sensor-indicator" class="hidden">
+                                    <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                                </div>
                             </div>
                             <button
                                 id="close-chatbox-btn"
@@ -318,11 +335,182 @@
 
         <script src="assets/js/jquery-3.7.1.min.js"></script>
         <script type="module" src="assets/js/firebase.js"></script>
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+            import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+            
+            const firebaseConfig = {
+                apiKey: "AIzaSyDMRQvPf9OZkhp1sO-WjvwW4kjRC07B3Ek",
+                authDomain: "gps-test-68ee2.firebaseapp.com",
+                databaseURL: "https://gps-test-68ee2-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "gps-test-68ee2",
+                storageBucket: "gps-test-68ee2.firebasestorage.app",
+                messagingSenderId: "615321729912",
+                appId: "1:615321729912:web:725acd118500d77e33a68d"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const database = getDatabase(app);
+
+            // Global functions for sensor updates
+            window.addSensorMessageToChat = function(message, type = 'info') {
+                var $chatBody = $("#support-chatbox .p-4.h-64");
+                var bgClass = "bg-blue-50 text-blue-900";
+                var icon = "🔵";
+                
+                // Set different colors based on message type
+                switch(type) {
+                    case 'alert':
+                        bgClass = "bg-red-50 text-red-900";
+                        icon = "🚨";
+                        break;
+                    case 'warning':
+                        bgClass = "bg-yellow-50 text-yellow-900";
+                        icon = "⚠️";
+                        break;
+                    case 'success':
+                        bgClass = "bg-green-50 text-green-900";
+                        icon = "✅";
+                        break;
+                    case 'vibration':
+                        bgClass = "bg-purple-50 text-purple-900";
+                        icon = "📳";
+                        break;
+                    case 'gps':
+                        bgClass = "bg-blue-50 text-blue-900";
+                        icon = "📍";
+                        break;
+                }
+                
+                var $sensorDiv = $("<div>")
+                    .addClass("self-start " + bgClass + " px-3 py-2 rounded-lg mb-2 max-w-xs");
+                
+                var messageHtml = icon + " " + message.replace(/\n/g, '<br>');
+                $sensorDiv.html(messageHtml);
+                $chatBody.append($sensorDiv);
+                $chatBody.scrollTop($chatBody[0].scrollHeight);
+                
+                // Show indicator
+                $("#sensor-indicator").removeClass("hidden");
+                setTimeout(function() {
+                    $("#sensor-indicator").addClass("hidden");
+                }, 3000);
+            };
+
+            // GPS specific function (for backward compatibility)
+            window.addGPSMessageToChat = function(message, lat, lng) {
+                var messageHtml = message;
+                if (lat && lng) {
+                    messageHtml += '\n<a href="https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lng + '" target="_blank" class="text-blue-600 hover:text-blue-800 text-xs underline">🗺️ Xem trên Google Maps</a>';
+                }
+                window.addSensorMessageToChat(messageHtml, 'gps');
+            };
+
+            window.updateMapMarker = function(lat, lng) {
+                if (window.bikeMarker) {
+                    var timestamp = new Date().toLocaleString('vi-VN');
+                    window.updateMapWithGPSData(lat, lng, timestamp);
+                }
+            };
+
+                                                         // Listen for GPS position updates
+                 onValue(ref(database, "posBike"), (snapshot) => {
+                     const posData = snapshot.val();
+                     if (posData && posData.lat && posData.lon) {
+                         const currentTime = new Date().toLocaleString('vi-VN');
+                         const gpsMessage = `Vị trí xe máy mới cập nhật:\n🌍 Kinh độ: ${posData.lon.toFixed(6)}\n🌍 Vĩ độ: ${posData.lat.toFixed(6)}\n⏰ Thời gian: ${currentTime}`;
+                         
+                         // Trigger GPS update event
+                         window.dispatchEvent(new CustomEvent('gpsUpdate', {
+                             detail: {
+                                 message: gpsMessage,
+                                 lat: posData.lat,
+                                 lng: posData.lon
+                             }
+                         }));
+                     }
+                 });
+
+                 // Listen for alert status changes
+                 onValue(ref(database, "alert"), (snapshot) => {
+                     const alertStatus = snapshot.val();
+                     const currentTime = new Date().toLocaleString('vi-VN');
+                     
+                     if (alertStatus) {
+                         const alertMessage = `Cảnh báo chống trộm đã được kích hoạt!\n🛡️ Trạng thái: Bật\n⏰ Thời gian: ${currentTime}`;
+                         window.dispatchEvent(new CustomEvent('alertUpdate', {
+                             detail: { message: alertMessage, status: true }
+                         }));
+                     } else {
+                         const alertMessage = `Cảnh báo chống trộm đã được tắt.\n🛡️ Trạng thái: Tắt\n⏰ Thời gian: ${currentTime}`;
+                         window.dispatchEvent(new CustomEvent('alertUpdate', {
+                             detail: { message: alertMessage, status: false }
+                         }));
+                     }
+                 });
+
+                 // Listen for auto mode changes
+                 onValue(ref(database, "auto"), (snapshot) => {
+                     const autoStatus = snapshot.val();
+                     const currentTime = new Date().toLocaleString('vi-VN');
+                     
+                     if (autoStatus) {
+                         const autoMessage = `Chế độ chống trộm tự động đã được kích hoạt!\n⚡ Trạng thái: Bật\n⏰ Thời gian: ${currentTime}`;
+                         window.dispatchEvent(new CustomEvent('autoUpdate', {
+                             detail: { message: autoMessage, status: true }
+                         }));
+                     } else {
+                         const autoMessage = `Chế độ chống trộm tự động đã được tắt.\n⚡ Trạng thái: Tắt\n⏰ Thời gian: ${currentTime}`;
+                         window.dispatchEvent(new CustomEvent('autoUpdate', {
+                             detail: { message: autoMessage, status: false }
+                         }));
+                     }
+                 });
+
+                 // Listen for alert ring changes
+                 onValue(ref(database, "alertRing"), (snapshot) => {
+                     const ringStatus = snapshot.val();
+                     const currentTime = new Date().toLocaleString('vi-VN');
+                     
+                     if (ringStatus) {
+                         const ringMessage = `Chuông cảnh báo đã được kích hoạt!\n🔔 Trạng thái: Bật\n⏰ Thời gian: ${currentTime}`;
+                         window.dispatchEvent(new CustomEvent('alertRingUpdate', {
+                             detail: { message: ringMessage, status: true }
+                         }));
+                     } else {
+                         const ringMessage = `Chuông cảnh báo đã được tắt.\n🔔 Trạng thái: Tắt\n⏰ Thời gian: ${currentTime}`;
+                         window.dispatchEvent(new CustomEvent('alertRingUpdate', {
+                             detail: { message: ringMessage, status: false }
+                         }));
+                     }
+                 });
+
+                 // Listen for vibration data updates
+                 onValue(ref(database, "vibrationData"), (snapshot) => {
+                     const vibrationData = snapshot.val();
+                     if (vibrationData && Array.isArray(vibrationData) && vibrationData.length > 0) {
+                         const currentTime = new Date().toLocaleString('vi-VN');
+                         const latestVibration = vibrationData[vibrationData.length - 1];
+                         
+                         if (latestVibration.numberOfVibration > 0) {
+                             const vibrationMessage = `Phát hiện rung lắc xe máy!\n📳 Số lần rung: ${latestVibration.numberOfVibration}\n🕐 Giờ: ${latestVibration.hour}\n⏰ Thời gian: ${currentTime}`;
+                             window.dispatchEvent(new CustomEvent('vibrationUpdate', {
+                                 detail: { message: vibrationMessage, data: latestVibration }
+                             }));
+                         }
+                     }
+                 });
+        </script>
         <script>
             // Sử dụng jQuery cho toàn bộ logic
             $(function () {
                 // Initialize Lucide icons
                 lucide.createIcons();
+
+                // Request notification permission
+                if (Notification.permission === "default") {
+                    Notification.requestPermission();
+                }
 
                 // Load user data
                 var userData = JSON.parse(localStorage.getItem("bikeguard_user") || "{}");
@@ -364,17 +552,14 @@
                 //     window.location.href = "auth.html";
                 // }
 
-                // Giả lập vị trí xe máy
-                var lat_bike = 13.856219;
-                var lon_bike = 109.038577;
-
+                // Lấy vị trí người dùng để tính khoảng cách
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
-                        var lat_user = position.coords.latitude;
-                        var lon_user = position.coords.longitude;
-
-                        // Tính khoảng cách
-                        var distance = haversine(lat_user, lon_user, lat_bike, lon_bike);
+                        window.userLat = position.coords.latitude;
+                        window.userLng = position.coords.longitude;
+                        
+                        // Tính khoảng cách với vị trí xe máy hiện tại
+                        var distance = haversine(window.userLat, window.userLng, bikeLat, bikeLng);
 
                         // Hiển thị khoảng cách (làm tròn, đơn vị mét hoặc km)
                         var display = "";
@@ -387,6 +572,7 @@
                     },
                     function () {
                         $("#distance-value").text("Không xác định");
+                        console.log("Không thể lấy vị trí người dùng");
                     }
                 );
 
@@ -464,15 +650,99 @@
                     },
                 });
 
-                // Initialize Leaflet map
-                var bikeLat = 21.028511,
-                    bikeLng = 105.804817;
-                var map = L.map("map").setView([bikeLat, bikeLng], 16);
+                // Initialize Leaflet map with better configuration
+                var bikeLat = 10.762833,
+                    bikeLng = 106.682461;
+                
+                // Create map with better options
+                var map = L.map("map", {
+                    center: [bikeLat, bikeLng],
+                    zoom: 16,
+                    zoomControl: true,
+                    scrollWheelZoom: true,
+                    doubleClickZoom: true,
+                    boxZoom: true,
+                    keyboard: true,
+                    dragging: true,
+                    touchZoom: true
+                });
+                
+                // Add tile layer with better styling
                 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                     maxZoom: 19,
                     attribution: "&copy; OpenStreetMap contributors",
+                    subdomains: 'abc'
                 }).addTo(map);
-                L.marker([bikeLat, bikeLng]).addTo(map).bindPopup("Vị trí xe máy").openPopup();
+                
+                // Create custom bike icon
+                var bikeIcon = L.divIcon({
+                    html: '<div style="background-color: #10b981; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>',
+                    className: 'custom-bike-marker',
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+                
+                // Create bike marker with custom icon
+                window.bikeMarker = L.marker([bikeLat, bikeLng], { icon: bikeIcon })
+                    .addTo(map)
+                    .bindPopup("<b>Vị trí xe máy</b><br>Đang cập nhật...")
+                    .openPopup();
+                
+                // Add scale control
+                L.control.scale({ imperial: false, metric: true }).addTo(map);
+                
+                // Function to update map with new GPS data
+                window.updateMapWithGPSData = function(lat, lng, timestamp) {
+                    if (window.bikeMarker) {
+                        // Update marker position
+                        window.bikeMarker.setLatLng([lat, lng]);
+                        
+                        // Update popup content with detailed information
+                        var popupContent = `
+                            <div style="min-width: 200px;">
+                                <h3 style="margin: 0 0 8px 0; color: #10b981; font-weight: bold;">📍 Vị trí xe máy</h3>
+                                <p style="margin: 4px 0; font-size: 12px;"><strong>Kinh độ:</strong> ${lng.toFixed(6)}</p>
+                                <p style="margin: 4px 0; font-size: 12px;"><strong>Vĩ độ:</strong> ${lat.toFixed(6)}</p>
+                                <p style="margin: 4px 0; font-size: 12px;"><strong>Cập nhật:</strong> ${timestamp}</p>
+                                <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" 
+                                   target="_blank" 
+                                   style="color: #10b981; text-decoration: none; font-size: 11px;">
+                                   🗺️ Xem trên Google Maps
+                                </a>
+                            </div>
+                        `;
+                        
+                        window.bikeMarker.bindPopup(popupContent).openPopup();
+                        
+                        // Smoothly pan to new location
+                        map.panTo([lat, lng], { animate: true, duration: 1 });
+                        
+                                                 // Update "Last seen" text
+                         $("#last-seen-time").text("Vừa cập nhật");
+                         
+                         // Update Google Maps link
+                         var googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+                         $('a[href*="google.com/maps"]').attr('href', googleMapsLink);
+                         
+                         // Update distance calculation if user location is available
+                         if (window.userLat && window.userLng) {
+                             var distance = haversine(window.userLat, window.userLng, lat, lng);
+                             var display = "";
+                             if (distance >= 1000) {
+                                 display = (distance / 1000).toFixed(2) + " km";
+                             } else {
+                                 display = Math.round(distance) + " m";
+                             }
+                             $("#distance-value").text(display);
+                         }
+                         
+                         // Add animation effect to marker
+                         window.bikeMarker.getElement().style.animation = 'pulse 1s ease-in-out';
+                         setTimeout(function() {
+                             window.bikeMarker.getElement().style.animation = '';
+                         }, 1000);
+                    }
+                };
 
                 // Restore toggle states from localStorage
                 $("#alert-toggle").prop("checked", localStorage.getItem("alert_toggle") === "on");
@@ -493,19 +763,97 @@
                 });
                 lucide.createIcons();
 
-                // Show chatbox
-                $("#contact-support-btn").on("click", function () {
-                    var $chatbox = $("#support-chatbox > div");
-                    $("#support-chatbox").css("pointer-events", "auto");
-                    $chatbox.show();
-                    lucide.createIcons();
-                });
-                // Hide chatbox
-                $("#close-chatbox-btn").on("click", function () {
-                    var $chatbox = $("#support-chatbox > div");
-                    $chatbox.hide();
-                    $("#support-chatbox").css("pointer-events", "none");
-                });
+                                 // Show chatbox
+                 $("#contact-support-btn").on("click", function () {
+                     $("#support-chatbox").show();
+                     lucide.createIcons();
+                 });
+                 
+                 // Hide chatbox
+                 $("#close-chatbox-btn").on("click", function () {
+                     $("#support-chatbox").hide();
+                 });
+
+                // GPS update event listener
+                 window.addEventListener('gpsUpdate', function(event) {
+                     const { message, lat, lng } = event.detail;
+                     
+                     // Auto-open chatbox if it's closed
+                     if ($("#support-chatbox").is(":hidden")) {
+                         $("#support-chatbox").show();
+                         lucide.createIcons();
+                     }
+                     
+                     // Add GPS update message to chatbox
+                     window.addGPSMessageToChat(message, lat, lng);
+                     
+                     // Update map marker
+                     window.updateMapMarker(lat, lng);
+                 });
+
+                                 // Alert update event listener
+                 window.addEventListener('alertUpdate', function(event) {
+                     const { message, status } = event.detail;
+                     
+                     // Auto-open chatbox if it's closed
+                     if ($("#support-chatbox").is(":hidden")) {
+                         $("#support-chatbox").show();
+                         lucide.createIcons();
+                     }
+                     
+                     // Add alert message to chatbox
+                     window.addSensorMessageToChat(message, status ? 'alert' : 'success');
+                     
+                     // Show browser notification for critical alerts
+                     if (status && Notification.permission === "granted") {
+                         new Notification("🚨 Cảnh báo BikeGuard", {
+                             body: "Cảnh báo chống trộm đã được kích hoạt!",
+                             icon: "/favicon.ico"
+                         });
+                     }
+                 });
+
+                                 // Auto mode update event listener
+                 window.addEventListener('autoUpdate', function(event) {
+                     const { message, status } = event.detail;
+                     
+                     // Auto-open chatbox if it's closed
+                     if ($("#support-chatbox").is(":hidden")) {
+                         $("#support-chatbox").show();
+                         lucide.createIcons();
+                     }
+                     
+                     // Add auto mode message to chatbox
+                     window.addSensorMessageToChat(message, status ? 'warning' : 'success');
+                 });
+
+                                 // Alert ring update event listener
+                 window.addEventListener('alertRingUpdate', function(event) {
+                     const { message, status } = event.detail;
+                     
+                     // Auto-open chatbox if it's closed
+                     if ($("#support-chatbox").is(":hidden")) {
+                         $("#support-chatbox").show();
+                         lucide.createIcons();
+                     }
+                     
+                     // Add alert ring message to chatbox
+                     window.addSensorMessageToChat(message, status ? 'alert' : 'success');
+                 });
+
+                                 // Vibration update event listener
+                 window.addEventListener('vibrationUpdate', function(event) {
+                     const { message, data } = event.detail;
+                     
+                     // Auto-open chatbox if it's closed
+                     if ($("#support-chatbox").is(":hidden")) {
+                         $("#support-chatbox").show();
+                         lucide.createIcons();
+                     }
+                     
+                     // Add vibration message to chatbox
+                     window.addSensorMessageToChat(message, 'vibration');
+                 });
 
                 // Static bot reply on chat submit
                 var $chatForm = $("#support-chatbox form");
