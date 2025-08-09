@@ -4,11 +4,13 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>BikeGuard - Dashboard</title>
+        <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
         <style>
             .gradient-bg {
                 background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
@@ -193,78 +195,120 @@
                             <div class="bg-purple-100 rounded-lg p-3">
                                 <i data-lucide="map-pin" class="h-6 w-6 text-purple-600"></i>
                             </div>
-                            <span id="distance-value" class="text-purple-600 font-semibold text-lg"
-                                >--</span
-                            >
+                            <div class="flex items-center space-x-2">
+                                <span id="distance-value" class="text-purple-600 font-semibold text-lg">--</span>
+                                <button id="refresh-location" class="p-1 text-purple-400 hover:text-purple-600 transition-colors" title="Làm mới vị trí">
+                                    <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+                                </button>
+                            </div>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-900">Khoảng cách</h3>
                         <p class="text-gray-600 text-sm">Từ thiết bị của bạn</p>
-                    </div>
-                    <!-- Quick Actions -->
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 slide-in">
-                        <div class="p-6 border-b border-gray-200">
-                            <h2 class="text-xl font-semibold text-gray-900">Quick Actions</h2>
+                        <div id="location-help" class="mt-2 p-2 bg-blue-50 rounded-lg text-xs text-blue-700 hidden">
+                            <i data-lucide="info" class="h-3 w-3 inline mr-1"></i>
+                            <strong>Hướng dẫn:</strong> Cho phép truy cập vị trí hoặc sử dụng nút refresh để lấy vị trí mặc định
                         </div>
+                    </div>
+                                     <!-- Quick Actions -->
+                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 slide-in">
+                     <div class="p-6 border-b border-gray-200">
+                         <h2 class="text-xl font-semibold text-gray-900">Quick Actions</h2>
+                     </div>
 
-                        <div class="p-6 space-y-4">
-                            <!-- Toggle Anti-theft Alert -->
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <i
-                                        data-lucide="shield"
-                                        class="h-5 w-5 text-emerald-600 mr-2"></i>
-                                    <span class="font-medium text-gray-800"
-                                        >Cảnh báo chống trộm</span
-                                    >
-                                </div>
-                                <!-- Switch style -->
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="alert-toggle" class="sr-only peer" />
-                                    <div
-                                        class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-emerald-600 transition-all duration-200"></div>
-                                    <div
-                                        class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
-                                </label>
-                            </div>
-                            <!-- Toggle Auto Anti-theft Mode -->
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <i data-lucide="zap" class="h-5 w-5 text-yellow-500 mr-2"></i>
-                                    <span class="font-medium text-gray-800"
-                                        >Chống trộm tự động</span
-                                    >
-                                </div>
-                                <!-- Switch style -->
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="auto-toggle" class="sr-only peer" />
-                                    <div
-                                        class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-yellow-400 transition-all duration-200"></div>
-                                    <div
-                                        class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
-                                </label>
-                            </div>
-                            <!-- Toggle Turn off Anti-theft Ring -->
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center">
-                                    <i
-                                        data-lucide="alert-triangle"
-                                        class="h-5 w-5 text-red-600 mr-2"></i>
-                                    <span class="font-medium text-gray-800">Chuông chống trộm</span>
-                                </div>
-                                <!-- Switch style -->
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        id="alert-ring-toggle"
-                                        class="sr-only peer" />
-                                    <div
-                                        class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-500 transition-all duration-200"></div>
-                                    <div
-                                        class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                     <div class="p-6 space-y-4">
+                         <!-- Toggle Anti-theft Alert -->
+                         <div class="flex items-center justify-between">
+                             <div class="flex items-center">
+                                 <i
+                                     data-lucide="shield"
+                                     class="h-5 w-5 text-emerald-600 mr-2"></i>
+                                 <span class="font-medium text-gray-800"
+                                     >Cảnh báo chống trộm</span
+                                 >
+                             </div>
+                             <!-- Switch style -->
+                             <label class="relative inline-flex items-center cursor-pointer">
+                                 <input type="checkbox" id="alert-toggle" class="sr-only peer" />
+                                 <div
+                                     class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-emerald-600 transition-all duration-200"></div>
+                                 <div
+                                     class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
+                             </label>
+                         </div>
+                         <!-- Toggle Auto Anti-theft Mode -->
+                         <div class="flex items-center justify-between">
+                             <div class="flex items-center">
+                                 <i data-lucide="zap" class="h-5 w-5 text-yellow-500 mr-2"></i>
+                                 <span class="font-medium text-gray-800"
+                                     >Chống trộm tự động</span
+                                 >
+                             </div>
+                             <!-- Switch style -->
+                             <label class="relative inline-flex items-center cursor-pointer">
+                                 <input type="checkbox" id="auto-toggle" class="sr-only peer" />
+                                 <div
+                                     class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-yellow-400 transition-all duration-200"></div>
+                                 <div
+                                     class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
+                             </label>
+                         </div>
+                         <!-- Toggle Turn off Anti-theft Ring -->
+                         <div class="flex items-center justify-between">
+                             <div class="flex items-center">
+                                 <i
+                                     data-lucide="alert-triangle"
+                                     class="h-5 w-5 text-red-600 mr-2"></i>
+                                 <span class="font-medium text-gray-800">Chuông chống trộm</span>
+                             </div>
+                             <!-- Switch style -->
+                             <label class="relative inline-flex items-center cursor-pointer">
+                                 <input
+                                     type="checkbox"
+                                     id="alert-ring-toggle"
+                                     class="sr-only peer" />
+                                 <div
+                                     class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-500 transition-all duration-200"></div>
+                                 <div
+                                     class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
+                             </label>
+                         </div>
+                         
+                         <!-- Notification Settings -->
+                         <div class="pt-4 border-t border-gray-200">
+                             <h3 class="text-lg font-semibold text-gray-900 mb-3">Cài đặt thông báo</h3>
+                             
+                             <!-- PushSafer Notifications -->
+                             <div class="flex items-center justify-between mb-3">
+                                 <div class="flex items-center">
+                                     <i data-lucide="smartphone" class="h-5 w-5 text-blue-600 mr-2"></i>
+                                     <span class="font-medium text-gray-800">Thông báo điện thoại</span>
+                                 </div>
+                                 <label class="relative inline-flex items-center cursor-pointer">
+                                     <input type="checkbox" id="pushsafer-toggle" class="sr-only peer" checked />
+                                     <div
+                                         class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-all duration-200"></div>
+                                     <div
+                                         class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
+                                 </label>
+                             </div>
+                             
+                             <!-- Email Notifications -->
+                             <div class="flex items-center justify-between mb-3">
+                                 <div class="flex items-center">
+                                     <i data-lucide="mail" class="h-5 w-5 text-green-600 mr-2"></i>
+                                     <span class="font-medium text-gray-800">Thông báo email</span>
+                                 </div>
+                                 <label class="relative inline-flex items-center cursor-pointer">
+                                     <input type="checkbox" id="email-toggle" class="sr-only peer" />
+                                     <div
+                                         class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-green-600 transition-all duration-200"></div>
+                                     <div
+                                         class="absolute left-0.5 top-0.5 w-5 h-5 bg-white border border-gray-300 rounded-full shadow transform peer-checked:translate-x-5 transition-all duration-200"></div>
+                                 </label>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
                 </div>
                 <!-- Support -->
                 <div class="fixed bottom-6 right-6 z-50">
@@ -406,14 +450,111 @@
                 window.addSensorMessageToChat(messageHtml, 'gps');
             };
 
-            window.updateMapMarker = function(lat, lng) {
-                if (window.bikeMarker) {
-                    var timestamp = new Date().toLocaleString('vi-VN');
-                    window.updateMapWithGPSData(lat, lng, timestamp);
-                }
-            };
+                window.updateMapMarker = function(lat, lng) {
+                 if (window.bikeMarker) {
+                     var timestamp = new Date().toLocaleString('vi-VN');
+                     window.updateMapWithGPSData(lat, lng, timestamp);
+                 }
+             };
 
-                                                         // Listen for GPS position updates
+             // PushSafer notification function
+             window.sendPushSaferNotification = function(lat, lng, time, type = 'theft') {
+                 const pushSaferKey = 'ovcTwrFwJI1IbDWULzTX';
+                 
+                 let message, title;
+                 if (type === 'alarm') {
+                     title = '🚨 CHUÔNG CHỐNG TRỘM ĐÃ KÍCH HOẠT!';
+                     message = `🔔 Chuông cảnh báo chống trộm đã được kích hoạt!
+                🛡️ Hệ thống đang bảo vệ xe của bạn.
+                📍 Vị trí hiện tại:
+                https://www.google.com/maps/search/?api=1&query=${lat},${lng}
+                🕒 Thời gian: ${time}
+                ⚠️ Hãy kiểm tra xe ngay!`;
+                 } else {
+                     title = '🚨 CẢNH BÁO TRỘM – XE BỊ XÂM NHẬP!';
+                     message = `🔒 Hệ thống phát hiện chuyển động/lực tác động bất thường vào xe.
+                📍 Vị trí hiện tại:
+                https://www.google.com/maps/search/?api=1&query=${lat},${lng}
+                🕒 Thời gian: ${time}
+                🔔 Hãy kiểm tra xe ngay!`;
+                 }
+                 
+                 const encodedMessage = encodeURIComponent(message);
+                 const pushSaferUrl = `https://www.pushsafer.com/api?k=${pushSaferKey}&s=8&v=1&t=${encodeURIComponent(title)}&m=${encodedMessage}`;
+                 
+                 fetch(pushSaferUrl)
+                     .then(response => response.json())
+                     .then(data => {
+                         console.log('PushSafer notification sent:', data);
+                         if (data.status === 1) {
+                             console.log('✅ PushSafer notification sent successfully');
+                         } else {
+                             console.error('❌ PushSafer notification failed');
+                         }
+                     })
+                     .catch(error => {
+                         console.error('Error sending PushSafer notification:', error);
+                     });
+             };
+
+             // Email notification function (using EmailJS)
+             window.sendEmailNotification = function(lat, lng, time, type = 'theft') {
+                 // Check if EmailJS is loaded
+                 if (typeof emailjs === 'undefined') {
+                     console.warn('EmailJS not loaded, skipping email notification');
+                     return;
+                 }
+
+                 const userEmail = localStorage.getItem('notification_email');
+                 if (!userEmail) {
+                     console.warn('No email configured for notifications');
+                     return;
+                 }
+
+                 let subject, message;
+                 if (type === 'alarm') {
+                     subject = '🚨 CHUÔNG CHỐNG TRỘM ĐÃ KÍCH HOẠT!';
+                     message = `Chuông cảnh báo chống trộm đã được kích hoạt!
+
+🛡️ Hệ thống đang bảo vệ xe của bạn.
+📍 Vị trí hiện tại: https://www.google.com/maps/search/?api=1&query=${lat},${lng}
+🕒 Thời gian: ${time}
+
+⚠️ Hãy kiểm tra xe ngay!
+
+---
+BikeGuard Security System
+https://bikeguard.com`;
+                 } else {
+                     subject = '🚨 CẢNH BÁO TRỘM – XE BỊ XÂM NHẬP!';
+                     message = `Hệ thống BikeGuard phát hiện chuyển động/lực tác động bất thường vào xe.
+
+📍 Vị trí hiện tại: https://www.google.com/maps/search/?api=1&query=${lat},${lng}
+🕒 Thời gian: ${time}
+
+🔔 Hãy kiểm tra xe ngay!
+
+---
+BikeGuard Security System
+https://bikeguard.com`;
+                 }
+
+                 const templateParams = {
+                     to_email: userEmail,
+                     subject: subject,
+                     message: message,
+                     from_name: 'BikeGuard Security'
+                 };
+
+                 emailjs.send('service_vmaqh5y', 'template_71zepv8', templateParams)
+                     .then(function(response) {
+                         console.log('✅ Email notification sent successfully:', response);
+                     }, function(error) {
+                         console.error('❌ Email notification failed:', error);
+                     });
+             };
+
+                // Listen for GPS position updates
                  onValue(ref(database, "posBike"), (snapshot) => {
                      const posData = snapshot.val();
                      if (posData && posData.lat && posData.lon) {
@@ -431,23 +572,23 @@
                      }
                  });
 
-                 // Listen for alert status changes
-                 onValue(ref(database, "alert"), (snapshot) => {
-                     const alertStatus = snapshot.val();
-                     const currentTime = new Date().toLocaleString('vi-VN');
-                     
-                     if (alertStatus) {
-                         const alertMessage = `Cảnh báo chống trộm đã được kích hoạt!\n🛡️ Trạng thái: Bật\n⏰ Thời gian: ${currentTime}`;
-                         window.dispatchEvent(new CustomEvent('alertUpdate', {
-                             detail: { message: alertMessage, status: true }
-                         }));
-                     } else {
-                         const alertMessage = `Cảnh báo chống trộm đã được tắt.\n🛡️ Trạng thái: Tắt\n⏰ Thời gian: ${currentTime}`;
-                         window.dispatchEvent(new CustomEvent('alertUpdate', {
-                             detail: { message: alertMessage, status: false }
-                         }));
-                     }
-                 });
+                    // Listen for alert status changes
+                  onValue(ref(database, "alert"), (snapshot) => {
+                      const alertStatus = snapshot.val();
+                      const currentTime = new Date().toLocaleString('vi-VN');
+                      
+                      if (alertStatus) {
+                          const alertMessage = `Cảnh báo chống trộm đã được kích hoạt!\n🛡️ Trạng thái: Bật\n⏰ Thời gian: ${currentTime}`;
+                          window.dispatchEvent(new CustomEvent('alertUpdate', {
+                              detail: { message: alertMessage, status: true, time: currentTime }
+                          }));
+                      } else {
+                          const alertMessage = `Cảnh báo chống trộm đã được tắt.\n🛡️ Trạng thái: Tắt\n⏰ Thời gian: ${currentTime}`;
+                          window.dispatchEvent(new CustomEvent('alertUpdate', {
+                              detail: { message: alertMessage, status: false, time: currentTime }
+                          }));
+                      }
+                  });
 
                  // Listen for auto mode changes
                  onValue(ref(database, "auto"), (snapshot) => {
@@ -504,13 +645,19 @@
         <script>
             // Sử dụng jQuery cho toàn bộ logic
             $(function () {
-                // Initialize Lucide icons
-                lucide.createIcons();
+                                 // Initialize Lucide icons
+                 lucide.createIcons();
 
-                // Request notification permission
-                if (Notification.permission === "default") {
-                    Notification.requestPermission();
-                }
+                 // Request notification permission
+                 if (Notification.permission === "default") {
+                     Notification.requestPermission();
+                 }
+                 
+                 // Initialize EmailJS (you need to replace with your actual EmailJS credentials)
+                 if (typeof emailjs !== 'undefined') {
+                     emailjs.init("23saYyEUu5vMSCT7V"); // Replace with your EmailJS Public Key
+                     console.log("EmailJS initialized");
+                 }
 
                 // Load user data
                 var userData = JSON.parse(localStorage.getItem("bikeguard_user") || "{}");
@@ -523,6 +670,12 @@
                     var name = userData.email.split("@")[0];
                     $("#user-name").text(name);
                     $("#welcome-name").text(name);
+                }
+                
+                // Save user email for notifications if available
+                if (userData.email) {
+                    localStorage.setItem('notification_email', userData.email);
+                    console.log('📧 User email saved for notifications:', userData.email);
                 }
 
                 // User menu toggle
@@ -547,34 +700,155 @@
                     window.location.href = "auth.html";
                 });
 
-                // Check if user is logged in
-                // if (!userData.email && !userData.firstName) {
-                //     window.location.href = "auth.html";
-                // }
+                // Lấy vị trí người dùng để tính khoảng cách với error handling tốt hơn
+                function getUserLocation() {
+                    // Kiểm tra xem trình duyệt có hỗ trợ geolocation không
+                    if (!navigator.geolocation) {
+                        console.log("Trình duyệt không hỗ trợ geolocation");
+                        $("#distance-value").text("Không hỗ trợ");
+                        return;
+                    }
 
-                // Lấy vị trí người dùng để tính khoảng cách
-                navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        window.userLat = position.coords.latitude;
-                        window.userLng = position.coords.longitude;
+                    // Tùy chọn cho geolocation - bắt đầu với độ chính xác thấp để tránh lỗi Google API
+                    var options = {
+                        enableHighAccuracy: false,  // Bắt đầu với độ chính xác thấp
+                        timeout: 10000,            // Giảm timeout xuống 10 giây
+                        maximumAge: 300000         // Cache vị trí trong 5 phút
+                    };
+
+                    navigator.geolocation.getCurrentPosition(
+                        function (position) {
+                            window.userLat = position.coords.latitude;
+                            window.userLng = position.coords.longitude;
+                            console.log("✅ Lấy vị trí người dùng thành công:", window.userLat, window.userLng);
+                            
+                            // Tính khoảng cách với vị trí xe máy hiện tại
+                            var distance = haversine(window.userLat, window.userLng, bikeLat, bikeLng);
+
+                            // Hiển thị khoảng cách (làm tròn, đơn vị mét hoặc km)
+                            var display = "";
+                            if (distance >= 1000) {
+                                display = (distance / 1000).toFixed(2) + " km";
+                            } else {
+                                display = Math.round(distance) + " m";
+                            }
+                            $("#distance-value").text(display);
+                            
+                            // Ẩn thông báo hướng dẫn nếu có
+                            $("#location-help").addClass("hidden").removeClass("block");
+                        },
+                        function (error) {
+                            console.log("❌ Lỗi lấy vị trí:", error.code, error.message);
+                            
+                            var errorMessage = "";
+                            switch(error.code) {
+                                case error.PERMISSION_DENIED:
+                                    errorMessage = "Bị từ chối quyền truy cập vị trí";
+                                    $("#location-help").removeClass("hidden").addClass("block");
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    errorMessage = "Không thể xác định vị trí";
+                                    break;
+                                case error.TIMEOUT:
+                                    errorMessage = "Hết thời gian chờ";
+                                    break;
+                                default:
+                                    errorMessage = "Lỗi không xác định";
+                                    break;
+                            }
+                            
+                            console.log("Không thể lấy vị trí người dùng:", errorMessage);
+                            
+                            // Sử dụng tọa độ mặc định cố định thay vì IP-based geolocation
+                            console.log("📍 Sử dụng tọa độ mặc định: 10.762824, 106.682437");
+                            window.userLat = 10.762824;
+                            window.userLng = 106.682437;
+                            
+                            // Tính khoảng cách với vị trí xe máy hiện tại
+                            var distance = haversine(window.userLat, window.userLng, bikeLat, bikeLng);
+                            var display = "";
+                            if (distance >= 1000) {
+                                display = (distance / 1000).toFixed(2) + " km";
+                            } else {
+                                display = Math.round(distance) + " m";
+                            }
+                            $("#distance-value").text(display + " (mặc định)");
+                            
+                            // Ẩn thông báo hướng dẫn
+                            $("#location-help").addClass("hidden").removeClass("block");
+                        },
+                        options
+                    );
+                }
+
+
+
+
+
+                // Gọi hàm lấy vị trí
+                console.log("🚀 Khởi tạo hệ thống lấy vị trí...");
+                getUserLocation();
+
+                // Event listener cho nút refresh location
+                $("#refresh-location").on("click", function() {
+                    console.log("🔄 Người dùng yêu cầu làm mới vị trí...");
+                    $("#distance-value").text("Đang tính...");
+                    
+                    // Thử geolocation trước, nếu thất bại thì dùng tọa độ mặc định
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                window.userLat = position.coords.latitude;
+                                window.userLng = position.coords.longitude;
+                                console.log("✅ Lấy vị trí thành công:", window.userLat, window.userLng);
+                                
+                                var distance = haversine(window.userLat, window.userLng, bikeLat, bikeLng);
+                                var display = "";
+                                if (distance >= 1000) {
+                                    display = (distance / 1000).toFixed(2) + " km";
+                                } else {
+                                    display = Math.round(distance) + " m";
+                                }
+                                $("#distance-value").text(display);
+                                $("#location-help").addClass("hidden").removeClass("block");
+                            },
+                            function(error) {
+                                console.log("❌ Geolocation thất bại, sử dụng tọa độ mặc định...");
+                                
+                                // Sử dụng tọa độ mặc định cố định
+                                window.userLat = 10.762824;
+                                window.userLng = 106.682437;
+                                console.log("📍 Sử dụng tọa độ mặc định: 10.762824, 106.682437");
+                                
+                                var distance = haversine(window.userLat, window.userLng, bikeLat, bikeLng);
+                                var display = "";
+                                if (distance >= 1000) {
+                                    display = (distance / 1000).toFixed(2) + " km";
+                                } else {
+                                    display = Math.round(distance) + " m";
+                                }
+                                $("#distance-value").text(display + " (mặc định)");
+                                $("#location-help").addClass("hidden").removeClass("block");
+                            },
+                            { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
+                        );
+                    } else {
+                        // Trình duyệt không hỗ trợ geolocation, sử dụng tọa độ mặc định
+                        window.userLat = 10.762824;
+                        window.userLng = 106.682437;
+                        console.log("📍 Sử dụng tọa độ mặc định: 10.762824, 106.682437");
                         
-                        // Tính khoảng cách với vị trí xe máy hiện tại
                         var distance = haversine(window.userLat, window.userLng, bikeLat, bikeLng);
-
-                        // Hiển thị khoảng cách (làm tròn, đơn vị mét hoặc km)
                         var display = "";
                         if (distance >= 1000) {
                             display = (distance / 1000).toFixed(2) + " km";
                         } else {
                             display = Math.round(distance) + " m";
                         }
-                        $("#distance-value").text(display);
-                    },
-                    function () {
-                        $("#distance-value").text("Không xác định");
-                        console.log("Không thể lấy vị trí người dùng");
+                        $("#distance-value").text(display + " (mặc định)");
+                        $("#location-help").addClass("hidden").removeClass("block");
                     }
-                );
+                });
 
                 function haversine(lat1, lon1, lat2, lon2) {
                     var R = 6371e3; // Bán kính Trái Đất (m)
@@ -651,8 +925,8 @@
                 });
 
                 // Initialize Leaflet map with better configuration
-                var bikeLat = 10.762833,
-                    bikeLng = 106.682461;
+                var bikeLat = 10.762824,
+                    bikeLng = 106.682437;
                 
                 // Create map with better options
                 var map = L.map("map", {
@@ -717,7 +991,7 @@
                         // Smoothly pan to new location
                         map.panTo([lat, lng], { animate: true, duration: 1 });
                         
-                                                 // Update "Last seen" text
+                        // Update "Last seen" text
                          $("#last-seen-time").text("Vừa cập nhật");
                          
                          // Update Google Maps link
@@ -744,26 +1018,40 @@
                     }
                 };
 
-                // Restore toggle states from localStorage
-                $("#alert-toggle").prop("checked", localStorage.getItem("alert_toggle") === "on");
-                $("#auto-toggle").prop("checked", localStorage.getItem("auto_toggle") === "on");
-                $("#alert-ring-toggle").prop(
-                    "checked",
-                    localStorage.getItem("alert_ring_toggle") === "on"
-                );
-                // Save toggle state on change
-                $("#alert-toggle").on("change", function () {
-                    localStorage.setItem("alert_toggle", this.checked ? "on" : "off");
-                });
-                $("#auto-toggle").on("change", function () {
-                    localStorage.setItem("auto_toggle", this.checked ? "on" : "off");
-                });
-                $("#alert-ring-toggle").on("change", function () {
-                    localStorage.setItem("alert_ring_toggle", this.checked ? "on" : "off");
-                });
+                    // Restore toggle states from localStorage
+                 $("#alert-toggle").prop("checked", localStorage.getItem("alert_toggle") === "on");
+                 $("#auto-toggle").prop("checked", localStorage.getItem("auto_toggle") === "on");
+                 $("#alert-ring-toggle").prop(
+                     "checked",
+                     localStorage.getItem("alert_ring_toggle") === "on"
+                 );
+                 
+                 // Restore notification toggle states
+                 $("#pushsafer-toggle").prop("checked", localStorage.getItem("pushsafer_enabled") !== "false");
+                 $("#email-toggle").prop("checked", localStorage.getItem("email_enabled") === "true");
+                 
+                                 // Save toggle state on change
+                 $("#alert-toggle").on("change", function () {
+                     localStorage.setItem("alert_toggle", this.checked ? "on" : "off");
+                 });
+                 $("#auto-toggle").on("change", function () {
+                     localStorage.setItem("auto_toggle", this.checked ? "on" : "off");
+                 });
+                 $("#alert-ring-toggle").on("change", function () {
+                     localStorage.setItem("alert_ring_toggle", this.checked ? "on" : "off");
+                 });
+                 
+                 // Save notification toggle states
+                 $("#pushsafer-toggle").on("change", function () {
+                     localStorage.setItem("pushsafer_enabled", this.checked);
+                 });
+                 $("#email-toggle").on("change", function () {
+                     localStorage.setItem("email_enabled", this.checked);
+                 });
+                 
                 lucide.createIcons();
 
-                                 // Show chatbox
+                    // Show chatbox
                  $("#contact-support-btn").on("click", function () {
                      $("#support-chatbox").show();
                      lucide.createIcons();
@@ -791,9 +1079,9 @@
                      window.updateMapMarker(lat, lng);
                  });
 
-                                 // Alert update event listener
+                // Alert update event listener
                  window.addEventListener('alertUpdate', function(event) {
-                     const { message, status } = event.detail;
+                     const { message, status, time } = event.detail;
                      
                      // Auto-open chatbox if it's closed
                      if ($("#support-chatbox").is(":hidden")) {
@@ -811,9 +1099,31 @@
                              icon: "/favicon.ico"
                          });
                      }
+                     
+                    // Send external notifications for critical alerts
+                     if (status) {
+                         // Get current GPS position for notifications
+                         if (window.bikeMarker) {
+                             const position = window.bikeMarker.getLatLng();
+                             const lat = position.lat;
+                             const lng = position.lng;
+                             
+                             // Send PushSafer notification if enabled
+                             if ($("#pushsafer-toggle").is(":checked")) {
+                                 console.log('🚨 Sending PushSafer notification for anti-theft alert');
+                                 window.sendPushSaferNotification(lat, lng, time);
+                             }
+                             
+                             // Send email notification if enabled
+                             if ($("#email-toggle").is(":checked")) {
+                                 console.log('📧 Sending email notification for anti-theft alert');
+                                 window.sendEmailNotification(lat, lng, time);
+                             }
+                         }
+                     }
                  });
 
-                                 // Auto mode update event listener
+                // Auto mode update event listener
                  window.addEventListener('autoUpdate', function(event) {
                      const { message, status } = event.detail;
                      
@@ -839,6 +1149,38 @@
                      
                      // Add alert ring message to chatbox
                      window.addSensorMessageToChat(message, status ? 'alert' : 'success');
+                     
+                     // Send notifications when alarm ring is activated
+                     if (status) {
+                         // Get current GPS position for notifications
+                         if (window.bikeMarker) {
+                             const position = window.bikeMarker.getLatLng();
+                             const lat = position.lat;
+                             const lng = position.lng;
+                             const currentTime = new Date().toLocaleString('vi-VN');
+                             
+                             // Send PushSafer notification if enabled
+                             if ($("#pushsafer-toggle").is(":checked")) {
+                                 console.log('🚨 Sending PushSafer notification for alarm ring activation');
+                                 window.sendPushSaferNotification(lat, lng, currentTime, 'alarm');
+                             }
+                             
+                             // Send email notification if enabled
+                             if ($("#email-toggle").is(":checked")) {
+                                 console.log('📧 Sending email notification for alarm ring activation');
+                                 window.sendEmailNotification(lat, lng, currentTime, 'alarm');
+                             }
+                             
+                             // Show browser notification
+                             if (Notification.permission === "granted") {
+                                 new Notification("🚨 Chuông chống trộm đã kích hoạt!", {
+                                     body: `Chuông cảnh báo đã được kích hoạt tại vị trí: ${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+                                     icon: "/favicon.ico",
+                                     tag: "alarm-ring"
+                                 });
+                             }
+                         }
+                     }
                  });
 
                                  // Vibration update event listener
