@@ -183,7 +183,7 @@
                             <span class="text-gray-400 text-sm">Biểu đồ thời gian thực</span>
                         </div>
                         <div class="p-6">
-                            <canvas id="vibrationChart" height="80"></canvas>
+                            <canvas id="vibrationChart" height="80" style="width: 100%; height: 300px;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -459,24 +459,17 @@
 
              // PushSafer notification function
              window.sendPushSaferNotification = function(lat, lng, time, type = 'theft') {
-                 const pushSaferKey = 'ovcTwrFwJI1IbDWULzTX';
+                 const pushSaferKey = 'VTegr4pu0SjqbrMgIvnD';
                  
                  let message, title;
                  if (type === 'alarm') {
-                     title = '🚨 CHUÔNG CHỐNG TRỘM ĐÃ KÍCH HOẠT!';
-                     message = `🔔 Chuông cảnh báo chống trộm đã được kích hoạt!
+                     title = '🚨 CHUÔNG CHỐNG TRỘM ĐÃ KÍCH HOẠT! – XE BỊ XÂM NHẬP!';
+                     message = `🔔 Chuông cảnh báo chống trộm đã được kích hoạt! Hệ thống phát hiện chuyển động/lực tác động bất thường vào xe.
                 🛡️ Hệ thống đang bảo vệ xe của bạn.
                 📍 Vị trí hiện tại:
                 https://www.google.com/maps/search/?api=1&query=${lat},${lng}
                 🕒 Thời gian: ${time}
                 ⚠️ Hãy kiểm tra xe ngay!`;
-                 } else {
-                     title = '🚨 CẢNH BÁO TRỘM – XE BỊ XÂM NHẬP!';
-                     message = `🔒 Hệ thống phát hiện chuyển động/lực tác động bất thường vào xe.
-                📍 Vị trí hiện tại:
-                https://www.google.com/maps/search/?api=1&query=${lat},${lng}
-                🕒 Thời gian: ${time}
-                🔔 Hãy kiểm tra xe ngay!`;
                  }
                  
                  const encodedMessage = encodeURIComponent(message);
@@ -513,26 +506,14 @@
 
                  let subject, message;
                  if (type === 'alarm') {
-                     subject = '🚨 CHUÔNG CHỐNG TRỘM ĐÃ KÍCH HOẠT!';
-                     message = `Chuông cảnh báo chống trộm đã được kích hoạt!
+                     subject = 'CHUÔNG CHỐNG TRỘM ĐÃ KÍCH HOẠT! – XE BỊ XÂM NHẬP!';
+                     message = `Chuông cảnh báo chống trộm đã được kích hoạt! Hệ thống phát hiện chuyển động/lực tác động bất thường vào xe.
 
 🛡️ Hệ thống đang bảo vệ xe của bạn.
 📍 Vị trí hiện tại: https://www.google.com/maps/search/?api=1&query=${lat},${lng}
 🕒 Thời gian: ${time}
 
 ⚠️ Hãy kiểm tra xe ngay!
-
----
-BikeGuard Security System
-https://bikeguard.com`;
-                 } else {
-                     subject = '🚨 CẢNH BÁO TRỘM – XE BỊ XÂM NHẬP!';
-                     message = `Hệ thống BikeGuard phát hiện chuyển động/lực tác động bất thường vào xe.
-
-📍 Vị trí hiện tại: https://www.google.com/maps/search/?api=1&query=${lat},${lng}
-🕒 Thời gian: ${time}
-
-🔔 Hãy kiểm tra xe ngay!
 
 ---
 BikeGuard Security System
@@ -629,16 +610,17 @@ https://bikeguard.com`;
                  // Listen for vibration data updates
                  onValue(ref(database, "vibrationData"), (snapshot) => {
                      const vibrationData = snapshot.val();
-                     if (vibrationData && Array.isArray(vibrationData) && vibrationData.length > 0) {
-                         const currentTime = new Date().toLocaleString('vi-VN');
-                         const latestVibration = vibrationData[vibrationData.length - 1];
-                         
-                         if (latestVibration.numberOfVibration > 0) {
-                             const vibrationMessage = `Phát hiện rung lắc xe máy!\n📳 Số lần rung: ${latestVibration.numberOfVibration}\n🕐 Giờ: ${latestVibration.hour}\n⏰ Thời gian: ${currentTime}`;
-                             window.dispatchEvent(new CustomEvent('vibrationUpdate', {
-                                 detail: { message: vibrationMessage, data: latestVibration }
-                             }));
-                         }
+                    if(vibrationData){
+                        const ringMessage = 'Hệ thống phát hiện chuyển động/lực tác động bất thường vào xe. Số lần rung lắc: ' + vibrationData.numberOfVibration;
+                        window.dispatchEvent(new CustomEvent('vibrationUpdate', {
+                            detail: { message: ringMessage, status: true }
+                        }));
+                    }
+                     // Luôn cập nhật biểu đồ, kể cả khi không có dữ liệu
+                     if (window.updateVibrationChart) {
+                         window.updateVibrationChart(vibrationData);
+                     } else {
+                         console.error('❌ Hàm updateVibrationChart chưa được định nghĩa');
                      }
                  });
         </script>
@@ -656,7 +638,6 @@ https://bikeguard.com`;
                  // Initialize EmailJS (you need to replace with your actual EmailJS credentials)
                  if (typeof emailjs !== 'undefined') {
                      emailjs.init("23saYyEUu5vMSCT7V"); // Replace with your EmailJS Public Key
-                     console.log("EmailJS initialized");
                  }
 
                 // Load user data
@@ -675,7 +656,6 @@ https://bikeguard.com`;
                 // Save user email for notifications if available
                 if (userData.email) {
                     localStorage.setItem('notification_email', userData.email);
-                    console.log('📧 User email saved for notifications:', userData.email);
                 }
 
                 // User menu toggle
@@ -757,10 +737,7 @@ https://bikeguard.com`;
                                     break;
                             }
                             
-                            console.log("Không thể lấy vị trí người dùng:", errorMessage);
-                            
                             // Sử dụng tọa độ mặc định cố định thay vì IP-based geolocation
-                            console.log("📍 Sử dụng tọa độ mặc định: 10.762824, 106.682437");
                             window.userLat = 10.762824;
                             window.userLng = 106.682437;
                             
@@ -781,17 +758,11 @@ https://bikeguard.com`;
                     );
                 }
 
-
-
-
-
                 // Gọi hàm lấy vị trí
-                console.log("🚀 Khởi tạo hệ thống lấy vị trí...");
                 getUserLocation();
 
                 // Event listener cho nút refresh location
                 $("#refresh-location").on("click", function() {
-                    console.log("🔄 Người dùng yêu cầu làm mới vị trí...");
                     $("#distance-value").text("Đang tính...");
                     
                     // Thử geolocation trước, nếu thất bại thì dùng tọa độ mặc định
@@ -813,12 +784,10 @@ https://bikeguard.com`;
                                 $("#location-help").addClass("hidden").removeClass("block");
                             },
                             function(error) {
-                                console.log("❌ Geolocation thất bại, sử dụng tọa độ mặc định...");
                                 
                                 // Sử dụng tọa độ mặc định cố định
                                 window.userLat = 10.762824;
                                 window.userLng = 106.682437;
-                                console.log("📍 Sử dụng tọa độ mặc định: 10.762824, 106.682437");
                                 
                                 var distance = haversine(window.userLat, window.userLng, bikeLat, bikeLng);
                                 var display = "";
@@ -836,7 +805,6 @@ https://bikeguard.com`;
                         // Trình duyệt không hỗ trợ geolocation, sử dụng tọa độ mặc định
                         window.userLat = 10.762824;
                         window.userLng = 106.682437;
-                        console.log("📍 Sử dụng tọa độ mặc định: 10.762824, 106.682437");
                         
                         var distance = haversine(window.userLat, window.userLng, bikeLat, bikeLng);
                         var display = "";
@@ -866,26 +834,15 @@ https://bikeguard.com`;
 
                 var ctx = document.getElementById("vibrationChart").getContext("2d");
 
-                // Tạo dữ liệu mẫu cho 12 giờ gần nhất
-                var hours = [];
-                var now = new Date();
-                for (var i = 11; i >= 0; i--) {
-                    var d = new Date(now.getTime() - i * 60 * 60 * 1000);
-                    hours.push(d.getHours() + ":00");
-                }
-                var vibrationData = Array.from({ length: 12 }, function () {
-                    return Math.floor(Math.random() * 10);
-                });
-
-                // Khởi tạo biểu đồ đường
+                // Khởi tạo biểu đồ đường với dữ liệu thực từ Firebase
                 var vibrationChart = new Chart(ctx, {
                     type: "line",
                     data: {
-                        labels: hours,
+                        labels: ['Đang tải dữ liệu...'],
                         datasets: [
                             {
                                 label: "Số lần rung lắc",
-                                data: vibrationData,
+                                data: [0],
                                 borderColor: "#10b981",
                                 backgroundColor: "rgba(16,185,129,0.1)",
                                 tension: 0.4,
@@ -899,6 +856,7 @@ https://bikeguard.com`;
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
                         plugins: {
                             legend: { display: false },
                             tooltip: {
@@ -923,6 +881,127 @@ https://bikeguard.com`;
                         },
                     },
                 });
+                
+
+                // Đảm bảo biểu đồ được hiển thị
+                setTimeout(function() {
+                    vibrationChart.update('none');
+                }, 100);
+
+                // Hàm lưu dữ liệu vào localStorage
+                window.saveVibrationData = function(vibrationDataObject) {
+                    if (!vibrationDataObject || typeof vibrationDataObject !== 'object') {
+                        return;
+                    }
+
+                    // Lấy dữ liệu cũ từ localStorage
+                    var existingData = JSON.parse(localStorage.getItem('vibrationHistory') || '{}');
+                    
+                    // Thêm dữ liệu mới
+                    Object.keys(vibrationDataObject).forEach(function(key) {
+                        var item = vibrationDataObject[key];
+                        if (item && typeof item === 'object') {
+                            // Chỉ lưu nếu key chưa tồn tại
+                            if (!existingData[key]) {
+                                // Tạo timestamp với độ trễ nhỏ để tránh trùng lặp
+                                var timestamp = Date.now() + Math.random() * 1000;
+                                existingData[key] = {
+                                    hour: item.hour,
+                                    numberOfVibration: item.numberOfVibration || 0,
+                                    timestamp: timestamp
+                                };
+                            }
+                        }
+                    });
+
+                    // Giới hạn số lượng dữ liệu lưu trữ (tối đa 1000 điểm)
+                    var keys = Object.keys(existingData);
+                    if (keys.length > 1000) {
+                        // Sắp xếp theo timestamp và giữ lại 1000 điểm mới nhất
+                        keys.sort(function(a, b) {
+                            return existingData[a].timestamp - existingData[b].timestamp;
+                        });
+                        
+                        var keysToRemove = keys.slice(0, keys.length - 1000);
+                        keysToRemove.forEach(function(key) {
+                            delete existingData[key];
+                        });
+                    }
+
+                    // Lưu vào localStorage
+                    localStorage.setItem('vibrationHistory', JSON.stringify(existingData));
+                };
+
+                // Hàm cập nhật biểu đồ với dữ liệu từ localStorage
+                window.updateVibrationChart = function(vibrationDataObject) {
+                    // Lưu dữ liệu mới vào localStorage
+                    window.saveVibrationData(vibrationDataObject);
+                    // Lấy dữ liệu từ localStorage
+                    var storedData = JSON.parse(localStorage.getItem('vibrationHistory') || '{}');
+                    
+                    if (Object.keys(storedData).length === 0) {
+                        // Hiển thị thông báo không có dữ liệu
+                        vibrationChart.data.labels = ['Chưa có dữ liệu rung lắc'];
+                        vibrationChart.data.datasets[0].data = [0];
+                        vibrationChart.update('none');
+                        
+                        var chartTitle = document.querySelector('.bg-white.rounded-xl.shadow-sm.border.border-gray-200.slide-in h2');
+                        if (chartTitle) {
+                            chartTitle.innerHTML = `Lịch sử rung lắc xe máy <span class="text-sm font-normal text-gray-500">(Đang chờ dữ liệu từ cảm biến)</span>`;
+                        }
+                        return;
+                    }
+
+                    // Chuyển đổi dữ liệu thành array và sắp xếp theo timestamp
+                    var vibrationArray = [];
+                    Object.keys(storedData).forEach(function(key) {
+                        var item = storedData[key];
+                        if (item && typeof item === 'object') {
+                            vibrationArray.push({
+                                key: key,
+                                hour: item.hour,
+                                numberOfVibration: item.numberOfVibration || 0,
+                                timestamp: item.timestamp
+                            });
+                        }
+                    });
+
+                    // Sắp xếp theo giờ
+                    var sortedData = vibrationArray.sort(function(a, b) {
+                        return a.hour - b.hour;
+                    });
+
+                    // Lấy 20 điểm dữ liệu gần nhất
+                    var recentData = sortedData.slice(-20);
+
+                    // Tạo labels và data trực tiếp từ dữ liệu
+                    var labels = [];
+                    var data = [];
+
+                    recentData.forEach(function(item) {
+                        // Sử dụng hour trực tiếp từ dữ liệu
+                        var timeStr = item.hour;
+                        
+                        // Xử lý trường hợp timeStr rỗng hoặc không hợp lệ
+                        if (!timeStr || timeStr === "" || timeStr === "0" || timeStr === 0) {
+                            // Sử dụng timestamp để tạo thời gian hiển thị
+                            var itemTime = new Date(item.timestamp);
+                            var displayTime = itemTime.getHours().toString().padStart(2, '0') + ':' + 
+                                             itemTime.getMinutes().toString().padStart(2, '0');
+                            labels.push(displayTime);
+                        } else {
+                            labels.push(timeStr);
+                        }
+                        
+                        // Sử dụng numberOfVibration trực tiếp từ Firebase
+                        data.push(item.numberOfVibration);
+                    });
+
+                    // Cập nhật biểu đồ
+                    vibrationChart.data.labels = labels;
+                    vibrationChart.data.datasets[0].data = data;
+                    vibrationChart.update('none');
+                };
 
                 // Initialize Leaflet map with better configuration
                 var bikeLat = 10.762824,
@@ -1030,7 +1109,7 @@ https://bikeguard.com`;
                  $("#pushsafer-toggle").prop("checked", localStorage.getItem("pushsafer_enabled") !== "false");
                  $("#email-toggle").prop("checked", localStorage.getItem("email_enabled") === "true");
                  
-                                 // Save toggle state on change
+                // Save toggle state on change
                  $("#alert-toggle").on("change", function () {
                      localStorage.setItem("alert_toggle", this.checked ? "on" : "off");
                  });
@@ -1197,7 +1276,7 @@ https://bikeguard.com`;
                      window.addSensorMessageToChat(message, 'vibration');
                  });
 
-                // Static bot reply on chat submit
+                // Smart bot reply on chat submit
                 var $chatForm = $("#support-chatbox form");
                 var $chatInput = $chatForm.find('input[type="text"]');
                 var $chatBody = $chatForm.parent().find(".p-4.h-64");
@@ -1206,6 +1285,7 @@ https://bikeguard.com`;
                     e.preventDefault();
                     var userMsg = $chatInput.val().trim();
                     if (!userMsg) return;
+                    
                     // Append user message
                     var $userDiv = $("<div>")
                         .addClass(
@@ -1214,13 +1294,39 @@ https://bikeguard.com`;
                         .text(userMsg);
                     $chatBody.append($userDiv);
 
-                    // Static bot reply
+                    // Smart bot reply based on user input
                     setTimeout(function () {
+                        var botReply = "";
+                        
+                        // Check if user is asking for coordinates
+                        if (userMsg.toLowerCase().includes("tọa độ") || userMsg.toLowerCase().includes("toa do")) {
+                            if (window.bikeMarker) {
+                                var position = window.bikeMarker.getLatLng();
+                                var lat = position.lat;
+                                var lng = position.lng;
+                                var currentTime = new Date().toLocaleString('vi-VN');
+                                
+                                botReply = `📍 Tọa độ xe máy hiện tại:\n🌍 Kinh độ: ${lng.toFixed(6)}\n🌍 Vĩ độ: ${lat.toFixed(6)}\n⏰ Cập nhật: ${currentTime}\n\n🗺️ <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank" class="text-blue-600 hover:text-blue-800 underline">Xem trên Google Maps</a>`;
+                            } else {
+                                botReply = "❌ Không thể lấy tọa độ xe máy. Vui lòng thử lại sau.";
+                            }
+                        } else {
+                            // Default reply for other messages
+                            botReply = "Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất.";
+                        }
+                        
                         var $botDiv = $("<div>")
                             .addClass(
                                 "self-start bg-emerald-50 text-emerald-900 px-3 py-2 rounded-lg mb-2"
-                            )
-                            .text("Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất.");
+                            );
+                        
+                        // If reply contains HTML (like links), use html() method
+                        if (botReply.includes('<a href=')) {
+                            $botDiv.html(botReply);
+                        } else {
+                            $botDiv.text(botReply);
+                        }
+                        
                         $chatBody.append($botDiv);
                         $chatBody.scrollTop($chatBody[0].scrollHeight);
                     }, 600);
@@ -1232,3 +1338,4 @@ https://bikeguard.com`;
         </script>
     </body>
 </html>
+
