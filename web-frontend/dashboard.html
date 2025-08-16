@@ -1216,7 +1216,7 @@ https://bikeguard.com`;
                      window.addSensorMessageToChat(message, status ? 'warning' : 'success');
                  });
 
-                                 // Alert ring update event listener
+                // Alert ring update event listener
                  window.addEventListener('alertRingUpdate', function(event) {
                      const { message, status } = event.detail;
                      
@@ -1262,7 +1262,7 @@ https://bikeguard.com`;
                      }
                  });
 
-                                 // Vibration update event listener
+                // Vibration update event listener
                  window.addEventListener('vibrationUpdate', function(event) {
                      const { message, data } = event.detail;
                      
