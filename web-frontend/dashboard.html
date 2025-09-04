@@ -384,13 +384,13 @@
             import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
             
             const firebaseConfig = {
-                apiKey: "AIzaSyDMRQvPf9OZkhp1sO-WjvwW4kjRC07B3Ek",
-                authDomain: "gps-test-68ee2.firebaseapp.com",
-                databaseURL: "https://gps-test-68ee2-default-rtdb.asia-southeast1.firebasedatabase.app",
-                projectId: "gps-test-68ee2",
-                storageBucket: "gps-test-68ee2.firebasestorage.app",
-                messagingSenderId: "615321729912",
-                appId: "1:615321729912:web:725acd118500d77e33a68d"
+                apiKey: "YOUR_FIREBASE_API_KEY",
+                authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+                databaseURL: "YOUR_FIREBASE_DATABASE_URL",
+                projectId: "YOUR_FIREBASE_PROJECT_ID",
+                storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+                messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+                appId: "YOUR_FIREBASE_APP_ID"
             };
 
             const app = initializeApp(firebaseConfig);
@@ -459,7 +459,7 @@
 
              // PushSafer notification function
              window.sendPushSaferNotification = function(lat, lng, time, type = 'theft') {
-                 const pushSaferKey = 'VTegr4pu0SjqbrMgIvnD';
+                 const pushSaferKey = 'YOUR_PUSHSAFER_KEY';
                  
                  let message, title;
                  if (type === 'alarm') {
@@ -527,7 +527,7 @@ https://bikeguard.com`;
                      from_name: 'BikeGuard Security'
                  };
 
-                 emailjs.send('service_vmaqh5y', 'template_71zepv8', templateParams)
+                 emailjs.send('YOUR_EMAILJS_SERVICE_ID', 'YOUR_EMAILJS_TEMPLATE_ID', templateParams)
                      .then(function(response) {
                          console.log('✅ Email notification sent successfully:', response);
                      }, function(error) {
@@ -637,7 +637,7 @@ https://bikeguard.com`;
                  
                  // Initialize EmailJS (you need to replace with your actual EmailJS credentials)
                  if (typeof emailjs !== 'undefined') {
-                     emailjs.init("23saYyEUu5vMSCT7V"); // Replace with your EmailJS Public Key
+                     emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
                  }
 
                 // Load user data

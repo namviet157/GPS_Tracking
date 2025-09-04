@@ -2,13 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebas
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDMRQvPf9OZkhp1sO-WjvwW4kjRC07B3Ek",
-  authDomain: "gps-test-68ee2.firebaseapp.com",
-  databaseURL: "https://gps-test-68ee2-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "gps-test-68ee2",
-  storageBucket: "gps-test-68ee2.firebasestorage.app",
-  messagingSenderId: "615321729912",
-  appId: "1:615321729912:web:725acd118500d77e33a68d"
+  apiKey: "YOUR_FIREBASE_API_KEY",
+  authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+  databaseURL: "YOUR_FIREBASE_DATABASE_URL",
+  projectId: "YOUR_FIREBASE_PROJECT_ID",
+  storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+  appId: "YOUR_FIREBASE_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);

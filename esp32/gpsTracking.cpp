@@ -13,8 +13,8 @@ WebServer webServer(80);
 #include <esp_event.h>
 #include "FirebaseESP32.h"
 
-#define API_KEY "AIzaSyDMRQvPf9OZkhp1sO-WjvwW4kjRC07B3Ek"
-#define DATABASE_URL "https://gps-test-68ee2-default-rtdb.asia-southeast1.firebasedatabase.app/"
+#define API_KEY "YOUR_FIREBASE_API_KEY"
+#define DATABASE_URL "YOUR_FIREBASE_DATABASE_URL"
 
 FirebaseData firebaseData;
 FirebaseAuth firebaseAuth;

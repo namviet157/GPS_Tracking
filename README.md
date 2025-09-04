@@ -98,9 +98,9 @@ cd GPS_Tracking/bikeguard-backend
 
 2. **Cấu hình database trong `application.properties`:**
 ```properties
-spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=UserDB;encrypt=true;trustServerCertificate=true
-spring.datasource.username=sa
-spring.datasource.password=123456789
+spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=YOUR_DB_NAME;encrypt=true;trustServerCertificate=true
+spring.datasource.username=YOUR_DB_USERNAME
+spring.datasource.password=YOUR_DB_PASSWORD
 ```
 
 3. **Chạy ứng dụng Spring Boot:**
@@ -124,7 +124,7 @@ Backend sẽ chạy tại: `http://localhost:8081`
    - FirebaseESP32
    - WebServer
 
-3. **Cấu hình WiFi và Firebase:**
+3. **Cấu hình WiFi và Firebase (KHÔNG public secrets):**
 ```cpp
 // Trong file gpsTracking.cpp
 const char* ssid = "YOUR_WIFI_SSID";
@@ -132,6 +132,26 @@ const char* password = "YOUR_WIFI_PASSWORD";
 
 #define API_KEY "YOUR_FIREBASE_API_KEY"
 #define DATABASE_URL "YOUR_FIREBASE_DATABASE_URL"
+```
+
+4. **Cấu hình Firebase cho Web Frontend (KHÔNG public secrets):**
+```js
+// Trong web-frontend/assets/js/firebase.js và web-frontend/dashboard.html
+const firebaseConfig = {
+  apiKey: "YOUR_FIREBASE_API_KEY",
+  authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
+  databaseURL: "YOUR_FIREBASE_DATABASE_URL",
+  projectId: "YOUR_FIREBASE_PROJECT_ID",
+  storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+  appId: "YOUR_FIREBASE_APP_ID"
+};
+```
+
+5. **Cấu hình dịch vụ thông báo (tùy chọn):**
+```text
+- PushSafer: đặt `YOUR_PUSHSAFER_KEY` trong `web-frontend/dashboard.html`
+- EmailJS: đặt `YOUR_EMAILJS_PUBLIC_KEY`, `YOUR_EMAILJS_SERVICE_ID`, `YOUR_EMAILJS_TEMPLATE_ID` trong `web-frontend/dashboard.html`
 ```
 
 4. **Upload code lên ESP32**
@@ -150,6 +170,11 @@ npx http-server -p 8000
 ```
 
 Frontend sẽ chạy tại: `http://localhost:8000`
+
+Lưu ý bảo mật:
+- Không commit API keys, mật khẩu, token, hoặc thông tin tài khoản lên repository công khai.
+- Sử dụng biến môi trường hoặc file cấu hình cục bộ (không commit) để cung cấp secrets khi triển khai.
+- Các ví dụ trong mã đã thay bằng placeholder như `YOUR_FIREBASE_API_KEY`.
 
 ## 📖 Hướng dẫn sử dụng
 
@@ -212,3 +237,6 @@ Frontend sẽ chạy tại: `http://localhost:8000`
 - `POST /api/gps/update` - Cập nhật vị trí (từ ESP32)
 
 ⭐ Nếu dự án này hữu ích, hãy cho chúng tôi một star trên GitHub!
+
+
+
